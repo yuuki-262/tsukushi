@@ -11,7 +11,7 @@ class wind(magic):
         self.width = 90
         self.height = 130
         self.count = 0
-        self.is_delete = False
+        self.is_del = False
         self.direction = direction
         if self.direction == direction_up:
             self.y = y - 80
@@ -33,7 +33,7 @@ class wind(magic):
                     e.is_death = True
                     #score += 1
         if self.count >= 40:
-            self.is_delete == True
+            self.is_del = True
 
 
     def get_img(self):

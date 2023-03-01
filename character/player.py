@@ -12,18 +12,19 @@ class player(character):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.spd = 3
+        self.spd = 4
         self.width = 75
         self.height = 150
         self.count = 0
         self.direction = direction_down
 
-        self.attack_type = 0
+        self.attack_type = 1
         self.attack_values = ["火", "雷", "風"]
         self.magics = []
         self.motion = ["1", "2", "1", "3", "1", "2"]
         self.is_moving = False
         self.is_attack = False
+        self.is_damaging = False
 
     def move(self, keys):
         self.count += 1
@@ -81,4 +82,4 @@ class player(character):
             self.attack_type = 1
         elif self.attack_values[i.type] == "風":
             self.attack_type = 2
-        i.is_delete = True
+        i.is_del = True

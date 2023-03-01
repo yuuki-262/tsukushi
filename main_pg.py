@@ -47,7 +47,7 @@ def main():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if player.is_attack == False:
+                    if not player.is_attack:
                         player.attack()
             if event.type == pygame.KEYUP:
                 player.is_moving = False
@@ -56,15 +56,14 @@ def main():
         for i in items:
             if is_hitting(player, i):
                 player.get_item(i)
-            if i.is_delete == True:
+            if i.is_del:
                 items.remove(i)
-                del(i)
                 continue
             i_img = pygame.image.load(i.get_img(player)).convert_alpha()
             screen.blit(i_img, direction_adjast(i))
 
         #敵の追加
-        if count % 50 == 0:
+        if count % 30 == 0:
             if random.randint(0,1) == 0:
                 enemies.append(tsukushi(800, random.randint(0,800), direction_left))
             else:
@@ -73,11 +72,13 @@ def main():
         #敵の処理
         for e in enemies:
             e.move(player)
-            if e.is_delete == True:
-                if random.randint(0,5) < 4:
+            if e.x < 0 - (e.width / 2) or e.y < 0 - (e.height / 2):
+                enemies.remove(e)
+                continue
+            if e.is_del:
+                if random.randint(0,5) < 2:
                     items.append(weapon(e.x, e.y, random.randint(0,2)))
                 enemies.remove(e)
-                del(e)
                 continue
             else:
                 e_img = pygame.image.load(e.get_img()).convert_alpha()
@@ -86,7 +87,7 @@ def main():
         #魔法の処理
         for m in player.magics:
             m.attack(enemies)
-            if m.count < 30:
+            if not m.is_del:
                 m_img = pygame.image.load(m.get_img()).convert_alpha()
                 screen.blit(m_img, direction_adjast(m))
             else:
@@ -97,7 +98,7 @@ def main():
         screen.blit(p_img, direction_adjast(player))
         pygame.display.update()
         count += 1
-        clock.tick(100)
+        clock.tick(60)
 
 if __name__ == '__main__':
     main()

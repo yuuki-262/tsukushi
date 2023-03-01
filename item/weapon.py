@@ -6,10 +6,10 @@ class weapon(item):
     def __init__(self, x, y, type):
         self.x = x
         self.y = y
-        self.width = 100
-        self.height = 100
+        self.width = 50
+        self.height = 50
         self.type = type
-        self.is_delete = False
+        self.is_del = False
 
     def get(self):
         pass

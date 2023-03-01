@@ -8,4 +8,7 @@ def is_hitting(c1:object, c2:object):
     return False
 
 def direction_adjast(obj: object):
-    return [obj.x - (obj.width / 2), obj.y - (obj.height / 2)]
+    return (obj.x - (obj.width / 2), obj.y - (obj.height / 2))
+
+
+

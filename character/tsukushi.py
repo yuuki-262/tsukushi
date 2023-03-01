@@ -6,7 +6,7 @@ class tsukushi(character):
         self.x = x
         self.y = y
         #self.no = no
-        self.spd = 1
+        self.spd = 2
         self.direction = direction
         self.count = 0
         if self.direction == direction_left:
@@ -19,7 +19,7 @@ class tsukushi(character):
         #攻撃の受けたつくしの無効化フラグ
         self.is_death = False
         #死亡エフェクト後にインスタンスを削除する為のフラグ
-        self.is_delete = False
+        self.is_del = False
 
         self.death_type = ""
         self.img_name = ""
@@ -27,7 +27,7 @@ class tsukushi(character):
         if self.is_death == True:
             self.count += 1
             if self.count >= 50:
-                self.is_delete = True
+                self.is_del = True
         else:
             if self.direction == direction_left:
                 self.x -= self.spd
@@ -48,5 +48,5 @@ class tsukushi(character):
     def get_img(self):
         if self.is_death == True and self.death_type != "":
             num = self.count % 50 // 10 + 1
-            return (dir_img_tsukushi + "死" + self.death_type + str(num) + png)
+            return (dir_img_tsukushi + "死" + self.death_type + self.direction + str(num) + png)
         return (dir_img_tsukushi + "つくし" + self.direction + png)
