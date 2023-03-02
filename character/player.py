@@ -16,7 +16,11 @@ class player(character):
         self.width = 75
         self.height = 150
         self.count = 0
+        self.damage_count = 0
         self.direction = direction_down
+
+        self.hp = 100
+        self.mp = 0
 
         self.attack_type = 1
         self.attack_values = ["火", "雷", "風"]
@@ -26,6 +30,13 @@ class player(character):
         self.is_attack = False
         self.is_damaging = False
 
+    def state(self, keys):
+        self.move(keys)
+        #ダメージを受けているときは無敵
+        if self.is_damaging:
+            self.ghost()
+
+    #位置情報の更新
     def move(self, keys):
         self.count += 1
         if self.is_attack == False:
@@ -83,3 +94,23 @@ class player(character):
         elif self.attack_values[i.type] == "風":
             self.attack_type = 2
         i.is_del = True
+
+    def hit_enemy(self):
+        if not self.is_damaging:
+            self.hp -= 25
+            self.is_damaging = True
+
+        if self.hp < 0:
+            #死んだときの処理
+            self.hp = 0
+
+    def ghost(self):
+        self.damage_count += 1
+
+        if self.damage_count >= 120:
+            self.damage_count = 0
+            self.is_damaging = False
+
+    def check_ghost(self):
+        #ダメージを受けているときは10フレームごとに画像を点滅(True時に画像表示)
+        return (self.is_damaging and self.damage_count % 20 // 10 == 0)

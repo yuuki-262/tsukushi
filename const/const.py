@@ -25,6 +25,8 @@ png = ".png"
 field_width = 800
 field_height = 800
 
-#プレイヤー初期位置
+#プレイヤー
 first_px = 300
 first_px = 400
+
+p_invincible_time = 120

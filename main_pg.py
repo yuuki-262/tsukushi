@@ -20,7 +20,7 @@ def main():
     player = player_c(300, 300)
     screen = pygame.display.set_mode((field_width, field_height))
     clock = pygame.time.Clock()
-    font = pygame.font.Font(None, 60)
+    font = pygame.font.Font(None, 80)
     enemies = []
     items = []
 
@@ -39,7 +39,7 @@ def main():
     while True:
         screen.blit(bg, rect_bg)
         pressed_key = pygame.key.get_pressed()
-        player.move(pressed_key)
+        player.state(pressed_key)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -73,16 +73,25 @@ def main():
         for e in enemies:
             e.move(player)
             if e.x < 0 - (e.width / 2) or e.y < 0 - (e.height / 2):
+                #画面外のつくしを削除
                 enemies.remove(e)
                 continue
+
             if e.is_del:
+                #死んだつくしの削除
                 if random.randint(0,5) < 2:
                     items.append(weapon(e.x, e.y, random.randint(0,2)))
                 enemies.remove(e)
                 continue
             else:
+                if is_hitting(player, e):
+                    #敵に当たっている時
+                    player.hit_enemy()
+                    enemies.remove(e)
+                    continue
                 e_img = pygame.image.load(e.get_img()).convert_alpha()
                 screen.blit(e_img, direction_adjast(e))
+
 
         #魔法の処理
         for m in player.magics:
@@ -94,8 +103,13 @@ def main():
                 player.magics.remove(m)
 
 
-        p_img = pygame.image.load(player.get_img()).convert_alpha()
-        screen.blit(p_img, direction_adjast(player))
+        if not player.check_ghost():
+            p_img = pygame.image.load(player.get_img()).convert_alpha()
+            screen.blit(p_img, direction_adjast(player))
+
+        hp_text = font.render("HP:" + str(player.hp), True, (0,0,0))
+        screen.blit(hp_text, [600, 0])
+
         pygame.display.update()
         count += 1
         clock.tick(60)
