@@ -31,6 +31,23 @@ def main():
     bg = pygame.image.load(dir_field_img).convert_alpha()
     rect_bg = bg.get_rect()
     screen.blit(bg, rect_bg)
+
+    # HP画像の取得
+    hp_bar_img = pygame.image.load(dir_hp_bar_img).convert_alpha()
+    rect_hp_bar = hp_bar_img.get_rect()
+    screen.blit(hp_bar_img, hp_position)
+    # HPバーの取得
+    hp_img = pygame.image.load(dir_hp_img).convert_alpha()
+    rect_hp = hp_img.get_rect()
+    screen.blit(hp_img, hp_position)
+
+    # MP画像の取得
+    mp_bar_img = pygame.image.load(dir_mp_bar_img).convert_alpha()
+    screen.blit(mp_bar_img, mp_position)
+    # MPバーの取得
+    mp_img = pygame.image.load(dir_mp_img).convert_alpha()
+    screen.blit(mp_img, mp_position)
+
     # プレイヤー画像の取得
     p_img = pygame.image.load(player.get_img()).convert_alpha()
     screen.blit(p_img, direction_adjast(player))
@@ -54,13 +71,15 @@ def main():
 
         #アイテムの処理
         for i in items:
+            i.state()
             if is_hitting(player, i):
                 player.get_item(i)
             if i.is_del:
                 items.remove(i)
                 continue
-            i_img = pygame.image.load(i.get_img(player)).convert_alpha()
-            screen.blit(i_img, direction_adjast(i))
+            if i.check_flash():
+                i_img = pygame.image.load(i.get_img(player)).convert_alpha()
+                screen.blit(i_img, direction_adjast(i))
 
         #敵の追加
         if count % 30 == 0:
@@ -79,7 +98,7 @@ def main():
 
             if e.is_del:
                 #死んだつくしの削除
-                if random.randint(0,5) < 2:
+                if random.randint(0,5) < 2 and len(items) < 3:
                     items.append(weapon(e.x, e.y, random.randint(0,2)))
                 enemies.remove(e)
                 continue
@@ -107,8 +126,13 @@ def main():
             p_img = pygame.image.load(player.get_img()).convert_alpha()
             screen.blit(p_img, direction_adjast(player))
 
-        hp_text = font.render("HP:" + str(player.hp), True, (0,0,0))
-        screen.blit(hp_text, [600, 0])
+        #hp_text = font.render("HP:" + str(player.hp), True, (0,0,0))
+        #screen.blit(hp_text, [600, 0])
+
+        screen.blit(hp_bar_img, hp_position)
+        screen.blit(hp_img.subsurface(pygame.Rect(0, 0, hp_img.get_width() * player.hp /100, hp_img.get_height())), hp_position)
+        screen.blit(mp_bar_img, mp_position)
+        screen.blit(mp_img.subsurface(pygame.Rect(0, 0, mp_img.get_width() * player.mp /100, mp_img.get_height())), mp_position)
 
         pygame.display.update()
         count += 1

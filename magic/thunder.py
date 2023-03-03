@@ -11,11 +11,11 @@ class thunder(magic):
         self.spd = 3
         self.direction = direction
         if self.direction == direction_left or self.direction == direction_right:
-            self.width = 90
-            self.height = 40
+            self.width = 75
+            self.height = 150
         elif self.direction == direction_up or self.direction == direction_down:
-            self.width = 40
-            self.height = 90
+            self.width = 75
+            self.height = 150
         self.count = 0
         self.is_del = False
         if self.direction == direction_up:

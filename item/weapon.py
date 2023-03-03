@@ -8,6 +8,7 @@ class weapon(item):
         self.y = y
         self.width = 50
         self.height = 50
+        self.count = 0
         self.type = type
         self.is_del = False
 
@@ -15,4 +16,13 @@ class weapon(item):
         pass
 
     def get_img(self, player :player):
-            return dir_img_item + player.attack_values[self.type]  + "メダル" + png
+        return dir_img_item + player.attack_values[self.type]  + "メダル" + png
+
+    def state(self):
+        self.count += 1
+        if self.count > 600:
+            self.is_del = True
+
+    def check_flash(self):
+        #ダメージを受けているときは10フレームごとに画像を点滅(True時に画像表示)
+        return (self.count < 420 or self.count % 20 // 10 == 0)

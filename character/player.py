@@ -20,7 +20,7 @@ class player(character):
         self.direction = direction_down
 
         self.hp = 100
-        self.mp = 0
+        self.mp = 100
 
         self.attack_type = 1
         self.attack_values = ["火", "雷", "風"]
@@ -63,8 +63,8 @@ class player(character):
 
     def get_img(self):
         if self.is_attack:
-            if self.count < 40:
-                return dir_img_warui + self.direction + "攻撃" + str(self.count // 20 + 1) + png
+            if self.count < 20:
+                return dir_img_warui + self.direction + "攻撃" + str(self.count // 10 + 1) + png
             self.is_attack = False
         if self.is_moving:
             num = self.count % 80 // 20 + 1
@@ -79,6 +79,7 @@ class player(character):
     def attack(self):
         self.is_attack = True
         self.count = 0
+        self.mp -= 20
         if self.attack_values[self.attack_type] == "火":
             self.magics.append(fire(self.x, self.y, self.direction))
         elif self.attack_values[self.attack_type] == "雷":
