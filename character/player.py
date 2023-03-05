@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from character.base.character import character
 from const.const import *
@@ -11,57 +12,74 @@ from magic.wind import wind
 class player(character):
     def __init__(self, x, y):
         self.x = x
-        self.y = y
-        self.spd = 4
-        self.width = 75
-        self.height = 150
+        self.y = field_position[1] + y
+        self.spd = p_spd
+        self.img_width = p_img_width
+        self.img_height = p_img_height
+        self.hit_width = p_hit_width
+        self.hit_height = p_hit_height
         self.count = 0
         self.damage_count = 0
+        self.wind_count = 0
         self.direction = direction_down
+
+        self.max_hp = 100
+        self.max_mp = 100
 
         self.hp = 100
         self.mp = 100
 
-        self.attack_type = 1
+        self.attack_type = 2
         self.attack_values = ["火", "雷", "風"]
         self.magics = []
         self.motion = ["1", "2", "1", "3", "1", "2"]
         self.is_moving = False
         self.is_attack = False
+        self.is_wind = False
         self.is_damaging = False
+        self.is_death = False
 
     def state(self, keys):
-        self.move(keys)
-        #ダメージを受けているときは無敵
-        if self.is_damaging:
-            self.ghost()
+        self.count += 1
+        if self.is_wind:
+            self.wind_state()
+        if not self.is_death:
+            self.move(keys)
+            self.auto_me_heal()
+            #ダメージを受けているときは無敵
+            if self.is_damaging:
+                self.ghost()
 
     #位置情報の更新
     def move(self, keys):
-        self.count += 1
         if self.is_attack == False:
-            if keys[pygame.K_LEFT]:
-                if self.x - self.spd >= 0 + self.width / 2:
-                    self.x = self.x - self.spd
+            if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
+                self.check_move(135)
                 self.direction = direction_left
-                self.is_moving = True
-            if keys[pygame.K_RIGHT]:
-                if self.x + self.spd <= field_width - self.width / 2:
-                    self.x = self.x + self.spd
+            elif keys[pygame.K_LEFT] and keys[pygame.K_DOWN]:
+                self.check_move(225)
+                self.direction = direction_left
+            elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
+                self.check_move(45)
+            elif keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
+                self.check_move(315)
                 self.direction = direction_right
-                self.is_moving = True
-            if keys[pygame.K_UP]:
-                if self.y - self.spd >= 0 + self.height / 2:
-                    self.y = self.y - self.spd
+            elif keys[pygame.K_LEFT]:
+                self.check_move(180)
+                self.direction = direction_left
+            elif keys[pygame.K_RIGHT]:
+                self.check_move(0)
+                self.direction = direction_right
+            elif keys[pygame.K_UP]:
+                self.check_move(90)
                 self.direction = direction_up
-                self.is_moving = True
-            if keys[pygame.K_DOWN]:
-                if self.y + self.spd <= field_height - self.height / 2:
-                    self.y = self.y + self.spd
+            elif keys[pygame.K_DOWN]:
+                self.check_move(270)
                 self.direction = direction_down
-                self.is_moving = True
 
     def get_img(self):
+        if self.is_death:
+            return dir_img_warui + "ダウン" + str(1 if self.count < 50 else 2) + png
         if self.is_attack:
             if self.count < 20:
                 return dir_img_warui + self.direction + "攻撃" + str(self.count // 10 + 1) + png
@@ -77,9 +95,13 @@ class player(character):
         return dir_img_warui + self.direction + self.motion[num] + png
 
     def attack(self):
+        if self.mp < 10:
+            return
         self.is_attack = True
         self.count = 0
-        self.mp -= 20
+        self.mp -= 10
+        if self.mp <= 0:
+            self.mp = 0
         if self.attack_values[self.attack_type] == "火":
             self.magics.append(fire(self.x, self.y, self.direction))
         elif self.attack_values[self.attack_type] == "雷":
@@ -89,10 +111,13 @@ class player(character):
 
     def get_item(self, i : item):
         if self.attack_values[i.type] == "火":
+            self.mp = 100
             self.attack_type = 0
         elif self.attack_values[i.type] == "雷":
+            self.mp = 100
             self.attack_type = 1
         elif self.attack_values[i.type] == "風":
+            self.mp = 100
             self.attack_type = 2
         i.is_del = True
 
@@ -101,9 +126,11 @@ class player(character):
             self.hp -= 25
             self.is_damaging = True
 
-        if self.hp < 0:
+        if self.hp <= 0:
             #死んだときの処理
             self.hp = 0
+            self.count = 0
+            self.is_death = True
 
     def ghost(self):
         self.damage_count += 1
@@ -112,6 +139,25 @@ class player(character):
             self.damage_count = 0
             self.is_damaging = False
 
+    def auto_me_heal(self):
+        if self.count % 60 == 0 and self.mp < 100:
+            self.mp += 1
+
+    def check_move(self, angle):
+        new_x = self.x + math.cos(math.radians(angle)) * self.spd
+        new_y = self.y - math.sin(math.radians(angle)) * self.spd
+        if new_x > field_left + self.img_width / 2 and new_x < field_right - self.img_width / 2:
+            self.x = new_x
+        if new_y > field_top and new_y < field_bottom - self.img_height / 2:
+            self.y = new_y
+        self.is_moving = True
+
     def check_ghost(self):
         #ダメージを受けているときは10フレームごとに画像を点滅(True時に画像表示)
-        return (self.is_damaging and self.damage_count % 20 // 10 == 0)
+        return (not self.is_death and self.is_damaging and self.damage_count % 20 // 10 == 0)
+
+    def wind_state(self):
+        self.wind_count += 1
+        if self.wind_count > 300:
+            self.wind_count = 0
+            self.is_wind = False

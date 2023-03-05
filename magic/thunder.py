@@ -11,11 +11,15 @@ class thunder(magic):
         self.spd = 3
         self.direction = direction
         if self.direction == direction_left or self.direction == direction_right:
-            self.width = 75
-            self.height = 150
+            self.img_width = 75
+            self.img_height = 150
+            self.hit_width = 75
+            self.hit_height = 150
         elif self.direction == direction_up or self.direction == direction_down:
-            self.width = 75
-            self.height = 150
+            self.img_width = 75
+            self.img_height = 150
+            self.hit_width = 75
+            self.hit_height = 150
         self.count = 0
         self.is_del = False
         if self.direction == direction_up:
@@ -28,7 +32,7 @@ class thunder(magic):
             self.x = x + 80
 
 
-    def attack(self, enemies):
+    def attack(self, enemies, player = None):
         self.count += 1
         if self.direction == direction_up:
             self.y = self.y - self.spd
@@ -53,10 +57,10 @@ class thunder(magic):
                 e.death_type = self.name
                 e.is_death = True
                 #score += 1
-        if (self.x < 0 - (self.width / 2)
-                or self.x > field_width + (self.width / 2)
-                or self.y < 0 - (self.height / 2)
-                or self.y > field_height + (self.height / 2) ):
+        if (self.x < field_left - (self.img_width / 2)
+                or self.x > field_right + (self.img_width / 2)
+                or self.y < field_top - (self.img_height / 2)
+                or self.y > field_bottom + (self.img_height / 2) ):
             self.is_del = True
 
 

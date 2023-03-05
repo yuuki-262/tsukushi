@@ -6,8 +6,10 @@ class weapon(item):
     def __init__(self, x, y, type):
         self.x = x
         self.y = y
-        self.width = 50
-        self.height = 50
+        self.img_width = 50
+        self.img_height = 50
+        self.hit_width = 50
+        self.hit_height = 50
         self.count = 0
         self.type = type
         self.is_del = False

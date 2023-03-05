@@ -10,11 +10,15 @@ class tsukushi(character):
         self.direction = direction
         self.count = 0
         if self.direction == direction_left:
-            self.width = 80
-            self.height = 30
+            self.img_width = 80
+            self.img_height = 30
+            self.hit_width = 80
+            self.hit_height = 30
         elif self.direction == direction_up:
-            self.width = 30
-            self.height = 80
+            self.img_width = 30
+            self.img_height = 80
+            self.hit_width = 30
+            self.hit_height = 80
 
         #攻撃の受けたつくしの無効化フラグ
         self.is_death = False

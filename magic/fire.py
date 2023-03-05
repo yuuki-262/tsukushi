@@ -9,8 +9,10 @@ class fire(magic):
         self.x = x
         self.y = y
         self.spd = 3
-        self.width = 90
-        self.height = 130
+        self.img_width = 75
+        self.img_height = 150
+        self.hit_width = 90
+        self.hit_height = 150
         self.count = 0
         self.is_del = False
         self.direction = direction
@@ -24,7 +26,7 @@ class fire(magic):
             self.x = x + 80
 
 
-    def attack(self, enemies):
+    def attack(self, enemies, player = None):
         self.count += 1
         if self.count < 20:
         #つくしのヒット処理

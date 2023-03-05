@@ -8,8 +8,10 @@ class wind(magic):
         self.x = x
         self.y = y
         self.spd = 3
-        self.width = 90
-        self.height = 130
+        self.img_width = 75
+        self.img_height = 150
+        self.hit_width = 75
+        self.hit_height = 150
         self.count = 0
         self.is_del = False
         self.direction = direction
@@ -23,16 +25,19 @@ class wind(magic):
             self.x = x + 80
 
 
-    def attack(self, enemies):
+    def attack(self, enemies, player):
+        player.is_wind = True
         self.count += 1
-        if self.count < 20:
-        #つくしのヒット処理
-            for e in enemies:
-                if e.is_death == False and is_hitting(self, e):
-                    e.death_type = self.name
-                    e.is_death = True
-                    #score += 1
-        if self.count >= 40:
+        if self.count % 60 < 20:
+            self.x = player.x + 50
+            self.y = player.y - 30
+        elif self.count % 60 < 40:
+            self.x = player.x - 50
+            self.y = player.y - 80
+        elif self.count % 60 < 60:
+            self.x = player.x - 50
+            self.y = player.y + 50
+        if self.count >= 240:
             self.is_del = True
 
 
