@@ -29,10 +29,11 @@ class player(character):
         self.hp = 100
         self.mp = 100
 
-        self.attack_type = 2
-        self.attack_values = ["火", "雷", "風"]
+        self.attack_type = 0
+        self.attack_values = p_attack_values
+        self.use_attack_mp = [p_fire_use_mp, p_thunder_use_mp, p_wind_use_mp]
         self.magics = []
-        self.motion = ["1", "2", "1", "3", "1", "2"]
+        self.motion = [0, 1, 0, 2, 0, 1]
         self.is_moving = False
         self.is_attack = False
         self.is_wind = False
@@ -61,6 +62,7 @@ class player(character):
                 self.direction = direction_left
             elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
                 self.check_move(45)
+                self.direction = direction_right
             elif keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
                 self.check_move(315)
                 self.direction = direction_right
@@ -79,27 +81,27 @@ class player(character):
 
     def get_img(self):
         if self.is_death:
-            return dir_img_warui + "ダウン" + str(1 if self.count < 50 else 2) + png
+            return p_img_index_dead[0 if self.count < 50 else 1]
+            #return dir_img_warui + "ダウン" + str(1 if self.count < 50 else 2) + png
         if self.is_attack:
             if self.count < 20:
-                return dir_img_warui + self.direction + "攻撃" + str(self.count // 10 + 1) + png
+                return p_img_index_attack[self.direction][self.count // 10]
             self.is_attack = False
         if self.is_moving:
-            num = self.count % 80 // 20 + 1
-            return dir_img_warui + self.direction + "移動" + str(num) + png
+            return p_img_index_move[self.direction][self.count % 80 // 20]
         num = self.count % 200 // 50
         if self.count % 200 > 109:
             num += 1
         if self.count % 200 > 139:
             num += 1
-        return dir_img_warui + self.direction + self.motion[num] + png
+        return p_img_index_nomal[self.direction][self.motion[num]]
 
     def attack(self):
-        if self.mp < 10:
+        if self.mp < self.use_attack_mp[self.attack_type]:
             return
         self.is_attack = True
         self.count = 0
-        self.mp -= 10
+        self.mp -= self.use_attack_mp[self.attack_type]
         if self.mp <= 0:
             self.mp = 0
         if self.attack_values[self.attack_type] == "火":

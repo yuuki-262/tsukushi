@@ -9,6 +9,7 @@ class thunder(magic):
         self.x = x
         self.y = y
         self.spd = 3
+        self.use_mp = 20
         self.direction = direction
         if self.direction == direction_left or self.direction == direction_right:
             self.img_width = 75
@@ -65,7 +66,7 @@ class thunder(magic):
 
 
     def get_img(self):
-        num = self.count // 20 + 1
-        if num > 3:
-            num = 3
-        return (dir_img_magic + self.name +  self.direction +  str(num) + png)
+        num = self.count // 20 
+        if num > 2:
+            num = 2
+        return warui_img_thunder[self.direction][num]

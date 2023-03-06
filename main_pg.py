@@ -8,6 +8,7 @@ from const.const import *
 from character.player import player as player_c
 from item.weapon import weapon
 from service.service import is_hitting, direction_adjast
+from service.img_servise import *
 from character.tsukushi import tsukushi
 from magic.fire import fire
 from magic.thunder import thunder
@@ -17,13 +18,17 @@ from magic.wind import wind
 def main():
     pygame.init()
     pygame.display.set_caption("つくしの軍勢")
-    player = player_c(300, 300)
+    player = player_c(first_px, first_py)
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
     font = pygame.font.Font(None, 80)
     enemies = []
     items = []
 
+    player_imgs = load_player_imgs()
+    enemy_imgs = load_enemy_imgs()
+    item_imgs = load_item_imgs()
+    warui_magic_imgs = load_attack_imgs()
     index = 0
 
     alpha = 0
@@ -55,30 +60,13 @@ def main():
     screen.blit(mp_img, mp_position)
 
     # プレイヤー画像の取得
-    p_img = pygame.image.load(player.get_img()).convert_alpha()
-    screen.blit(p_img, direction_adjast(player))
+    screen.blit(player_imgs[player.get_img()], direction_adjast(player))
     pygame.display.update()
 
     while True:
         #キャラクター死亡時
         if player.is_death:
-            darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
-            pressed_key = pygame.key.get_pressed()
-            player.state(pressed_key)
-            # 透明度を徐々に上げる
-            if alpha < 125:
-                alpha += 1
-                darken_surface.fill((0, 0, 0, alpha))
-                screen.blit(darken_surface, (0, 0))
-                p_img = pygame.image.load(player.get_img()).convert_alpha()
-                screen.blit(p_img, direction_adjast(player))
-            else:
-                darken_surface.fill((0, 0, 0, alpha))
-                # 画面に透明な黒いサーフェスを描画する
-                screen.blit(darken_surface, (0, 0))
-                text = font.render("GAME OVER", True, (255,255,255))
-                screen.blit(text, [220, 350])
-            pygame.display.update()
+            alpha = domn(screen, player, font, alpha, player_imgs)
             clock.tick(60)
             continue
 
@@ -108,8 +96,7 @@ def main():
                 items.remove(i)
                 continue
             if i.check_flash():
-                i_img = pygame.image.load(i.get_img(player)).convert_alpha()
-                screen.blit(i_img, direction_adjast(i))
+                screen.blit(item_imgs[i.get_img(player)], direction_adjast(i))
 
         #敵の追加
         if count % 30 == 0:
@@ -136,7 +123,7 @@ def main():
                 if is_hitting(player, e):
                     #敵に当たっている時
                     if player.is_wind:
-                        e.death_type = "風"
+                        e.death_type = p_attack_values[2]
                         e.is_death = True
                     elif e.is_death:
                         pass
@@ -144,23 +131,20 @@ def main():
                         player.hit_enemy()
                         enemies.remove(e)
                         continue
-                e_img = pygame.image.load(e.get_img()).convert_alpha()
-                screen.blit(e_img, direction_adjast(e))
+                screen.blit(enemy_imgs[e.get_img()], direction_adjast(e))
 
 
         #魔法の処理
         for m in player.magics:
             m.attack(enemies, player)
             if not m.is_del:
-                m_img = pygame.image.load(m.get_img()).convert_alpha()
-                screen.blit(m_img, direction_adjast(m))
+                screen.blit(warui_magic_imgs[m.get_img()], direction_adjast(m))
             else:
                 player.magics.remove(m)
 
 
         if not player.check_ghost():
-            p_img = pygame.image.load(player.get_img()).convert_alpha()
-            screen.blit(p_img, direction_adjast(player))
+            screen.blit(player_imgs[player.get_img()], direction_adjast(player))
 
         #hp_text = font.render("HP:" + str(player.hp), True, (0,0,0))
         #screen.blit(hp_text, [600, 0])
@@ -173,6 +157,26 @@ def main():
         pygame.display.update()
         count += 1
         clock.tick(60)
+
+
+def domn(screen, player, font, alpha, player_imgs):
+    darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+    pressed_key = pygame.key.get_pressed()
+    player.state(pressed_key)
+    # 透明度を徐々に上げる
+    if alpha < 125:
+        alpha += 1
+        darken_surface.fill((0, 0, 0, alpha))
+        screen.blit(darken_surface, (0, 0))
+        screen.blit(player_imgs[player.get_img()], direction_adjast(player))
+    else:
+        darken_surface.fill((0, 0, 0, alpha))
+        # 画面に透明な黒いサーフェスを描画する
+        screen.blit(darken_surface, (0, 0))
+        text = font.render("GAME OVER", True, (255,255,255))
+        screen.blit(text, [220, 450])
+    pygame.display.update()
+    return alpha
 
 if __name__ == '__main__':
     main()

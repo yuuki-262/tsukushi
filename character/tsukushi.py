@@ -51,6 +51,6 @@ class tsukushi(character):
 
     def get_img(self):
         if self.is_death == True and self.death_type != "":
-            num = self.count % 50 // 10 + 1
-            return (dir_img_tsukushi + "死" + self.death_type + self.direction + str(num) + png)
-        return (dir_img_tsukushi + "つくし" + self.direction + png)
+            num = self.count % 50 // 10
+            return e_img_index_dead[self.direction][self.death_type][num]
+        return e_img_index_nomal[self.direction][0]

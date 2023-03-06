@@ -21,9 +21,11 @@ dir_mp_img = dir_img_system + "MP.png"
 
 #方向
 direction_up = "上"
-direction_right = "右"
-direction_left = "左"
 direction_down = "下"
+direction_left = "左"
+direction_right = "右"
+
+
 
 #拡張子
 png = ".png"
@@ -44,8 +46,8 @@ field_right = 800
 
 
 #プレイヤー
-first_px = 300
-first_py = field_position[1] + 400
+first_px = 350
+first_py = 350
 
 p_invincible_time = 120
 p_spd = 5
@@ -53,6 +55,12 @@ p_img_width = 75
 p_img_height = 150
 p_hit_width = 75
 p_hit_height = 150
+
+p_fire_use_mp = 10
+p_thunder_use_mp = 20
+p_wind_use_mp = 60
+
+p_attack_values = ["火", "雷", "風"]
 
 #システム
 hp_width = 350
@@ -69,3 +77,63 @@ mp_height = 100
 
 hp_position = [50, 10]
 mp_position = [50, 60]
+
+#プレイヤー画像インデックス
+p_img_index_up = list(range(0,3))
+p_img_index_down = list(range(3,6))
+p_img_index_left = list(range(6,9))
+p_img_index_right = list(range(9,12))
+p_img_index_move_up = list(range(12,16))
+p_img_index_move_down = list(range(16,20))
+p_img_index_move_left = list(range(20,24))
+p_img_index_move_right = list(range(24,28))
+p_img_index_attack_up = list(range(28,30))
+p_img_index_attack_down = list(range(30,32))
+p_img_index_attack_left = list(range(32,34))
+p_img_index_attack_right = list(range(34,36))
+p_img_index_dead = list(range(36,38))
+
+p_img_index_nomal = {direction_up:p_img_index_up, direction_down:p_img_index_down, direction_left:p_img_index_left, direction_right:p_img_index_right}
+p_img_index_move = {direction_up:p_img_index_move_up, direction_down:p_img_index_move_down, direction_left:p_img_index_move_left, direction_right:p_img_index_move_right}
+p_img_index_attack = {direction_up:p_img_index_attack_up, direction_down:p_img_index_attack_down, direction_left:p_img_index_attack_left, direction_right:p_img_index_attack_right}
+
+#敵画像インデックス
+e_img_index_up = list(range(0,1))
+e_img_index_fire_up = list(range(1,6))
+e_img_index_thunder_up = list(range(6,11))
+e_img_index_wind_up = list(range(11,16))
+
+e_img_index_left = list(range(16,17))
+e_img_index_fire_left = list(range(17,22))
+e_img_index_thunder_left = list(range(22,27))
+e_img_index_wind_left = list(range(27,32))
+
+
+e_img_index_nomal = {direction_up:e_img_index_up, direction_left:e_img_index_left}
+e_img_index_dead = {
+    direction_up:{p_attack_values[0]:e_img_index_fire_up,p_attack_values[1]:e_img_index_thunder_up,p_attack_values[2]:e_img_index_wind_up},
+    direction_left:{p_attack_values[0]:e_img_index_fire_left,p_attack_values[1]:e_img_index_thunder_left,p_attack_values[2]:e_img_index_wind_left}
+    }
+
+#アイテム画像インデックス
+wepon_img_index_up = {p_attack_values[0]:0, p_attack_values[1]:1, p_attack_values[2]:2}
+onigiri_index_fire_up = list(range(3,6))
+
+#魔法画像インデックス
+warui_img_fire_up = list(range(0,3))
+warui_img_fire_down = list(range(3,6))
+warui_img_fire_left = list(range(6,9))
+warui_img_fire_right = list(range(9,12))
+
+warui_img_thunder_up = list(range(12,15))
+warui_img_thunder_down = list(range(15,18))
+warui_img_thunder_left = list(range(18,21))
+warui_img_thunder_right = list(range(21,24))
+
+warui_img_wind_all = list(range(24,27))
+
+warui_img_fire = {direction_up:warui_img_fire_up, direction_down:warui_img_fire_down, direction_left:warui_img_fire_left, direction_right:warui_img_fire_right}
+warui_img_thunder = {direction_up:warui_img_thunder_up, direction_down:warui_img_thunder_down, direction_left:warui_img_thunder_left, direction_right:warui_img_thunder_right}
+warui_img_wind = {direction_up:warui_img_wind_all, direction_down:warui_img_wind_all, direction_left:warui_img_wind_all, direction_right:warui_img_wind_all}
+
+warui_magic_img_index = {p_attack_values[0]:warui_img_fire, p_attack_values[1]:warui_img_thunder, p_attack_values[2]:warui_img_wind}

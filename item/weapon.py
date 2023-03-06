@@ -18,7 +18,7 @@ class weapon(item):
         pass
 
     def get_img(self, player :player):
-        return dir_img_item + player.attack_values[self.type]  + "メダル" + png
+        return wepon_img_index_up[player.attack_values[self.type]]
 
     def state(self):
         self.count += 1

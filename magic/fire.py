@@ -9,6 +9,7 @@ class fire(magic):
         self.x = x
         self.y = y
         self.spd = 3
+        self.use_mp = 10
         self.img_width = 75
         self.img_height = 150
         self.hit_width = 90
@@ -40,5 +41,5 @@ class fire(magic):
 
 
     def get_img(self):
-        num = self.count % 30 // 10 + 1
-        return (dir_img_magic + self.name +  self.direction +  str(num) + png)
+        num = self.count % 30 // 10
+        return warui_img_fire[self.direction][num]
