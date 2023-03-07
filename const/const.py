@@ -62,6 +62,9 @@ p_wind_use_mp = 60
 
 p_attack_values = ["火", "雷", "風"]
 
+#敵
+tsukushi_types = ["つくし", "キング", "ひげ"]
+
 #システム
 hp_width = 350
 hp_width_left = 20
@@ -78,6 +81,7 @@ mp_height = 100
 hp_position = [50, 10]
 mp_position = [50, 60]
 
+onigiri_type = ["onigiri", "shine", "baked"]
 #プレイヤー画像インデックス
 p_img_index_up = list(range(0,3))
 p_img_index_down = list(range(3,6))
@@ -114,10 +118,12 @@ e_img_index_dead = {
     direction_up:{p_attack_values[0]:e_img_index_fire_up,p_attack_values[1]:e_img_index_thunder_up,p_attack_values[2]:e_img_index_wind_up},
     direction_left:{p_attack_values[0]:e_img_index_fire_left,p_attack_values[1]:e_img_index_thunder_left,p_attack_values[2]:e_img_index_wind_left}
     }
+e_king_index = list(range(32,35))
+e_hige_index = list(range(35,38))
 
 #アイテム画像インデックス
 wepon_img_index_up = {p_attack_values[0]:0, p_attack_values[1]:1, p_attack_values[2]:2}
-onigiri_index_fire_up = list(range(3,6))
+onigiri_index_fire_up = {onigiri_type[0]:3, onigiri_type[1]:4, onigiri_type[2]:5}
 
 #魔法画像インデックス
 warui_img_fire_up = list(range(0,3))

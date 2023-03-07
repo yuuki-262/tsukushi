@@ -2,7 +2,7 @@ from item.base.item import item
 from const.const import *
 from character.player import player
 
-class weapon(item):
+class heal_item(item):
     def __init__(self, x, y, type):
         self.x = x
         self.y = y
@@ -11,23 +11,22 @@ class weapon(item):
         self.hit_width = 50
         self.hit_height = 50
         self.count = 0
-        self.type = type
+        self.type = onigiri_type[type]
         self.is_del = False
 
     def get(self, player):
-        if player.attack_values[self.type] == "火":
-            player.mp = 100
-            player.attack_type = 0
-        elif player.attack_values[self.type] == "雷":
-            player.mp = 100
-            player.attack_type = 1
-        elif player.attack_values[self.type] == "風":
-            player.mp = 100
-            player.attack_type = 2
+        if self.type == "onigiri":
+            player.hp += 10
+        elif self.type == "shine":
+            player.hp += 50
+        elif self.type == "baked":
+            player.hp += 20
+        if player.hp > player.max_hp:
+            player.hp = player.max_hp
         self.is_del = True
 
     def get_img(self, player :player):
-        return wepon_img_index_up[player.attack_values[self.type]]
+        return onigiri_index_fire_up[self.type]
 
     def state(self):
         self.count += 1

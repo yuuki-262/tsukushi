@@ -33,8 +33,7 @@ class fire(magic):
         #つくしのヒット処理
             for e in enemies:
                 if e.is_death == False and is_hitting(self, e):
-                    e.death_type = self.name
-                    e.is_death = True
+                    e.damage(self.name)
                     #score += 1
         if self.count >= 30:
             self.is_del = True

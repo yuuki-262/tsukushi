@@ -7,12 +7,10 @@ from const.const import *
 
 from character.player import player as player_c
 from item.weapon import weapon
+from item.heal_item import heal_item
 from service.service import is_hitting, direction_adjast
 from service.img_servise import *
 from character.tsukushi import tsukushi
-from magic.fire import fire
-from magic.thunder import thunder
-from magic.wind import wind
 
 
 def main():
@@ -91,7 +89,7 @@ def main():
         for i in items:
             i.state()
             if is_hitting(player, i):
-                player.get_item(i)
+                i.get(player)
             if i.is_del:
                 items.remove(i)
                 continue
@@ -99,9 +97,9 @@ def main():
                 screen.blit(item_imgs[i.get_img(player)], direction_adjast(i))
 
         #敵の追加
-        if count % 30 == 0:
+        if count % 20 == 0:
             if random.randint(0,1) == 0:
-                enemies.append(tsukushi(field_right, random.randint(field_top, field_bottom), direction_left))
+                enemies.append(tsukushi(field_right, random.randint(field_top, field_bottom), direction_left, random.randint(0,2)))
             else:
                 enemies.append(tsukushi(random.randint(field_left, field_right), field_bottom, direction_up))
 
@@ -117,20 +115,22 @@ def main():
                 #死んだつくしの削除
                 if random.randint(0,5) < 2 and len(items) < 3:
                     items.append(weapon(e.x, e.y, random.randint(0,2)))
+                elif random.randint(0,5) < 2 and len(items) < 3:
+                    items.append(heal_item(e.x, e.y, random.randint(0,2)))
                 enemies.remove(e)
                 continue
             else:
-                if is_hitting(player, e):
+                if is_hitting(player, e) and not e.is_ghost:
                     #敵に当たっている時
                     if player.is_wind:
-                        e.death_type = p_attack_values[2]
-                        e.is_death = True
+                        e.damage(p_attack_values[2])
                     elif e.is_death:
                         pass
                     else:
                         player.hit_enemy()
                         enemies.remove(e)
                         continue
+            if not e.is_ghost or e.count % 30 // 15 == 0:
                 screen.blit(enemy_imgs[e.get_img()], direction_adjast(e))
 
 

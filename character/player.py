@@ -111,18 +111,6 @@ class player(character):
         elif self.attack_values[self.attack_type] == "風":
             self.magics.append(wind(self.x, self.y, self.direction))
 
-    def get_item(self, i : item):
-        if self.attack_values[i.type] == "火":
-            self.mp = 100
-            self.attack_type = 0
-        elif self.attack_values[i.type] == "雷":
-            self.mp = 100
-            self.attack_type = 1
-        elif self.attack_values[i.type] == "風":
-            self.mp = 100
-            self.attack_type = 2
-        i.is_del = True
-
     def hit_enemy(self):
         if not self.is_damaging:
             self.hp -= 25
@@ -143,7 +131,7 @@ class player(character):
 
     def auto_me_heal(self):
         if self.count % 60 == 0 and self.mp < 100:
-            self.mp += 1
+            self.mp += 2
 
     def check_move(self, angle):
         new_x = self.x + math.cos(math.radians(angle)) * self.spd

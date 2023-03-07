@@ -8,7 +8,7 @@ class thunder(magic):
         self.name = "雷"
         self.x = x
         self.y = y
-        self.spd = 3
+        self.spd = 10
         self.use_mp = 20
         self.direction = direction
         if self.direction == direction_left or self.direction == direction_right:
@@ -55,8 +55,7 @@ class thunder(magic):
                 # BOX2 = pygame.Rect(e.x - (e.width / 2), e.y - (e.height / 2) , e.width, e.height)
                 # pygame.draw.rect(screen,RED, BOX1)
                 # pygame.draw.rect(screen,GREEN, BOX2)
-                e.death_type = self.name
-                e.is_death = True
+                e.damage(self.name)
                 #score += 1
         if (self.x < field_left - (self.img_width / 2)
                 or self.x > field_right + (self.img_width / 2)
@@ -66,7 +65,7 @@ class thunder(magic):
 
 
     def get_img(self):
-        num = self.count // 20 
+        num = self.count // 20
         if num > 2:
             num = 2
         return warui_img_thunder[self.direction][num]
