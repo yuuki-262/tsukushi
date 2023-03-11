@@ -56,9 +56,23 @@ def main():
             continue
 
         if index == 1:
+            count += 1
+            darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+            darken_surface.fill((0, 0, 0, 30))
+            # 画面に透明な黒いサーフェスを描画する
+            screen.blit(darken_surface, (0, 0))
+            pygame.display.update()
+            if count > 40:
+                index = 2
+                count = 0
+            clock.tick(60)
+            continue
+
+        if index == 2:
             in_game(screen, font, player, enemies, items, imgs, count)
             count += 1
             clock.tick(60)
+            continue
 
 
 def in_game(screen, font, player, enemies, items, imgs, count):
