@@ -16,6 +16,7 @@ index = 0
 title_index = title_img_index_normal
 field_index = field_img_index_normal
 bg_index = bg_img_index_normal
+bg_text_index = title_text1_img_index
 
 def main():
     global index
@@ -34,29 +35,23 @@ def main():
     count = 0
 
     imgs = load_all_imgs()
-    bg = pygame.image.load(dir_background1_img).convert_alpha()
-    rect_bg = bg.get_rect()
-    #screen.blit(bg, rect_bg)
 
-    # 背景画像の取得
-    field = pygame.image.load(dir_field_img).convert_alpha()
-    rect_bg = bg.get_rect()
     while True:
         title_images = imgs[title_imgs_index]
         if index == 0:
+            count += 1
             player = player_c(first_px, first_py)
             enemies = []
             items = []
             score = 0
-            count = 0
             screen.blit(title_images[title_index], title_images[title_index].get_rect())
-            text = font.render("- Press any key -", True, (255,0,255))
-            screen.blit(text, [200, 930])
+            if count % 120 // 60 == 0:
+                screen.blit(title_images[bg_text_index], title_images[title_index].get_rect())
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        index = 1
+                    index = 1
+                    count = 0
             clock.tick(60)
             continue
 

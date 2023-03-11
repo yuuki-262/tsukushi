@@ -135,6 +135,7 @@ def load_attack_imgs():
 def load_title_imgs():
     return [
         pygame.image.load(dir_img_title + "タイトル画面" + png).convert_alpha(),
+        pygame.image.load(dir_img_title + "タイトルメッセージ1" + png).convert_alpha(),
     ]
 
 def load_system_imgs():
@@ -144,12 +145,12 @@ def load_system_imgs():
         pygame.image.load(dir_mp_bar_img).convert_alpha(),
         pygame.image.load(dir_mp_img).convert_alpha(),
         pygame.image.load(dir_background1_img).convert_alpha(),
-        ]
+    ]
 
 def load_field_imgs():
     return [
         pygame.image.load(dir_field_img).convert_alpha(),
-        ]
+    ]
 
 def load_all_imgs():
     return [

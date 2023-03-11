@@ -19,7 +19,6 @@ dir_hp_img = dir_img_system + "HP.png"
 dir_mp_bar_img = dir_img_system + "MPバー.png"
 dir_mp_img = dir_img_system + "MP.png"
 
-
 #方向
 direction_up = "上"
 direction_down = "下"
@@ -95,6 +94,7 @@ field_imgs_index = 6
 
 #タイトル画像インデックス
 title_img_index_normal = 0
+title_text1_img_index = 1
 
 #システム画像インデックス
 hp_bar_img_index = 0
