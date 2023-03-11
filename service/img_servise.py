@@ -131,3 +131,33 @@ def load_attack_imgs():
         pygame.image.load(dir_img_magic + "風3" + png).convert_alpha(),
 
     ]
+
+def load_title_imgs():
+    return [
+        pygame.image.load(dir_img_title + "タイトル画面" + png).convert_alpha(),
+    ]
+
+def load_system_imgs():
+    return [
+        pygame.image.load(dir_hp_bar_img).convert_alpha(),
+        pygame.image.load(dir_hp_img).convert_alpha(),
+        pygame.image.load(dir_mp_bar_img).convert_alpha(),
+        pygame.image.load(dir_mp_img).convert_alpha(),
+        pygame.image.load(dir_background1_img).convert_alpha(),
+        ]
+
+def load_field_imgs():
+    return [
+        pygame.image.load(dir_field_img).convert_alpha(),
+        ]
+
+def load_all_imgs():
+    return [
+            load_title_imgs(),
+            load_player_imgs(),
+            load_enemy_imgs(),
+            load_item_imgs(),
+            load_attack_imgs(),
+            load_system_imgs(),
+            load_field_imgs(),
+        ]

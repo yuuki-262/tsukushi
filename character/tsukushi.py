@@ -60,7 +60,7 @@ class tsukushi(character):
                 #     self.x += 1
 
     def damage(self, attack_type):
-        if self.is_ghost:
+        if self.is_ghost or self.is_death:
             return
         if self.type == 2:
             self.type -= 1
@@ -87,4 +87,4 @@ class tsukushi(character):
             return e_hige_index[self.count % 30 // 10]
         if self.is_death == True and self.death_type != "":
             return e_img_index_dead[self.direction][self.death_type][self.count % 50 // 10]
-        return e_img_index_nomal[self.direction][0]
+        return e_img_index_normal[self.direction][0]

@@ -39,6 +39,7 @@ class player(character):
         self.is_wind = False
         self.is_damaging = False
         self.is_death = False
+        self.death_count = 0
 
     def state(self, keys):
         self.count += 1
@@ -94,7 +95,7 @@ class player(character):
             num += 1
         if self.count % 200 > 139:
             num += 1
-        return p_img_index_nomal[self.direction][self.motion[num]]
+        return p_img_index_normal[self.direction][self.motion[num]]
 
     def attack(self):
         if self.mp < self.use_attack_mp[self.attack_type]:

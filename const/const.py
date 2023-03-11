@@ -1,5 +1,6 @@
 #画像ディレクトリ
 dir_img = "img/"
+dir_img_title = "img/title/"
 dir_img_player = "img/player/"
 dir_img_enemy = "img/enemy/"
 dir_img_field = "img/field/"
@@ -82,6 +83,26 @@ hp_position = [50, 10]
 mp_position = [50, 60]
 
 onigiri_type = ["onigiri", "shine", "baked"]
+
+#全画像インデックス
+title_imgs_index = 0
+player_imgs_index = 1
+enemy_imgs_index = 2
+item_imgs_index = 3
+attack_imgs_index = 4
+system_imgs_index = 5
+field_imgs_index = 6
+
+#タイトル画像インデックス
+title_img_index_normal = 0
+
+#システム画像インデックス
+hp_bar_img_index = 0
+hp_img_index = 1
+mp_bar_img_index = 2
+mp_img_index = 3
+bg_img_index_normal = 4
+
 #プレイヤー画像インデックス
 p_img_index_up = list(range(0,3))
 p_img_index_down = list(range(3,6))
@@ -97,7 +118,7 @@ p_img_index_attack_left = list(range(32,34))
 p_img_index_attack_right = list(range(34,36))
 p_img_index_dead = list(range(36,38))
 
-p_img_index_nomal = {direction_up:p_img_index_up, direction_down:p_img_index_down, direction_left:p_img_index_left, direction_right:p_img_index_right}
+p_img_index_normal = {direction_up:p_img_index_up, direction_down:p_img_index_down, direction_left:p_img_index_left, direction_right:p_img_index_right}
 p_img_index_move = {direction_up:p_img_index_move_up, direction_down:p_img_index_move_down, direction_left:p_img_index_move_left, direction_right:p_img_index_move_right}
 p_img_index_attack = {direction_up:p_img_index_attack_up, direction_down:p_img_index_attack_down, direction_left:p_img_index_attack_left, direction_right:p_img_index_attack_right}
 
@@ -113,7 +134,7 @@ e_img_index_thunder_left = list(range(22,27))
 e_img_index_wind_left = list(range(27,32))
 
 
-e_img_index_nomal = {direction_up:e_img_index_up, direction_left:e_img_index_left}
+e_img_index_normal = {direction_up:e_img_index_up, direction_left:e_img_index_left}
 e_img_index_dead = {
     direction_up:{p_attack_values[0]:e_img_index_fire_up,p_attack_values[1]:e_img_index_thunder_up,p_attack_values[2]:e_img_index_wind_up},
     direction_left:{p_attack_values[0]:e_img_index_fire_left,p_attack_values[1]:e_img_index_thunder_left,p_attack_values[2]:e_img_index_wind_left}
@@ -143,3 +164,6 @@ warui_img_thunder = {direction_up:warui_img_thunder_up, direction_down:warui_img
 warui_img_wind = {direction_up:warui_img_wind_all, direction_down:warui_img_wind_all, direction_left:warui_img_wind_all, direction_right:warui_img_wind_all}
 
 warui_magic_img_index = {p_attack_values[0]:warui_img_fire, p_attack_values[1]:warui_img_thunder, p_attack_values[2]:warui_img_wind}
+
+#フィールド画像インデックス
+field_img_index_normal = 0
