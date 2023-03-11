@@ -16,13 +16,13 @@ class weapon(item):
 
     def get(self, player):
         if player.attack_values[self.type] == "火":
-            player.mp = 100
+            #player.mp = 100
             player.attack_type = 0
         elif player.attack_values[self.type] == "雷":
-            player.mp = 100
+            #player.mp = 100
             player.attack_type = 1
         elif player.attack_values[self.type] == "風":
-            player.mp = 100
+            #player.mp = 100
             player.attack_type = 2
         self.is_del = True
 

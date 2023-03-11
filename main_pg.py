@@ -12,14 +12,16 @@ from service.service import is_hitting, direction_adjast
 from service.img_servise import *
 from character.tsukushi import tsukushi
 
-index = 0
+index = title_index
+count = 0
+
 title_index = title_img_index_normal
 field_index = field_img_index_normal
 bg_index = bg_img_index_normal
 bg_text_index = title_text1_img_index
 
 def main():
-    global index
+    global index, count
     pygame.init()
     pygame.display.set_caption("つくしの軍勢")
 
@@ -32,13 +34,12 @@ def main():
     enemies = []
     items = []
     score = 0
-    count = 0
 
     imgs = load_all_imgs()
 
     while True:
         title_images = imgs[title_imgs_index]
-        if index == 0:
+        if index == title_index:
             count += 1
             player = player_c(first_px, first_py)
             enemies = []
@@ -47,15 +48,15 @@ def main():
             screen.blit(title_images[title_index], title_images[title_index].get_rect())
             if count % 120 // 60 == 0:
                 screen.blit(title_images[bg_text_index], title_images[title_index].get_rect())
-            pygame.display.update()
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN and count > 120:
                     index = 1
                     count = 0
+            pygame.display.update()
             clock.tick(60)
             continue
 
-        if index == 1:
+        if index == load_index:
             count += 1
             darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
             darken_surface.fill((0, 0, 0, 30))
@@ -63,19 +64,20 @@ def main():
             screen.blit(darken_surface, (0, 0))
             pygame.display.update()
             if count > 40:
-                index = 2
+                index = in_game_index
                 count = 0
             clock.tick(60)
             continue
 
-        if index == 2:
-            in_game(screen, font, player, enemies, items, imgs, count)
+        if index == in_game_index:
+            in_game(screen, font, player, enemies, items, imgs)
             count += 1
             clock.tick(60)
             continue
 
 
-def in_game(screen, font, player, enemies, items, imgs, count):
+def in_game(screen, font, player, enemies, items, imgs):
+    global count
     player_imgs = imgs[player_imgs_index]
     enemy_imgs = imgs[enemy_imgs_index]
     item_imgs = imgs[item_imgs_index]
@@ -175,7 +177,7 @@ def in_game(screen, font, player, enemies, items, imgs, count):
     pygame.display.update()
 
 def down(screen, player, font, player_imgs):
-    global index
+    global index, count
     darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
     pressed_key = pygame.key.get_pressed()
     player.state(pressed_key)
@@ -191,7 +193,8 @@ def down(screen, player, font, player_imgs):
         text = font.render("GAME OVER", True, (255,255,255))
         screen.blit(text, [220, 450])
         if player.death_count > 300:
-            index = 0
+            index = title_index
+            count = 0
     pygame.display.update()
     return
 

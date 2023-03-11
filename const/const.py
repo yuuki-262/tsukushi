@@ -58,7 +58,7 @@ p_hit_height = 150
 
 p_fire_use_mp = 10
 p_thunder_use_mp = 20
-p_wind_use_mp = 60
+p_wind_use_mp = 70
 
 p_attack_values = ["火", "雷", "風"]
 
@@ -82,6 +82,12 @@ hp_position = [50, 10]
 mp_position = [50, 60]
 
 onigiri_type = ["onigiri", "shine", "baked"]
+
+
+#ゲームインデックス
+title_index = 0
+load_index = 1
+in_game_index = 2
 
 #全画像インデックス
 title_imgs_index = 0

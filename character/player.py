@@ -38,16 +38,20 @@ class player(character):
         self.is_attack = False
         self.is_wind = False
         self.is_damaging = False
+        self.is_mp_heal = True
         self.is_death = False
         self.death_count = 0
 
     def state(self, keys):
         self.count += 1
+        if not self.is_mp_heal and self.count > 60:
+            self.is_mp_heal = True
         if self.is_wind:
             self.wind_state()
         if not self.is_death:
             self.move(keys)
-            self.auto_me_heal()
+            if self.is_mp_heal:
+                self.auto_me_heal()
             #ダメージを受けているときは無敵
             if self.is_damaging:
                 self.ghost()
@@ -102,6 +106,7 @@ class player(character):
             return
         self.is_attack = True
         self.count = 0
+        self.is_mp_heal = False
         self.mp -= self.use_attack_mp[self.attack_type]
         if self.mp <= 0:
             self.mp = 0
@@ -131,8 +136,8 @@ class player(character):
             self.is_damaging = False
 
     def auto_me_heal(self):
-        if self.count % 60 == 0 and self.mp < 100:
-            self.mp += 2
+        if self.count % 10 == 0 and self.mp < 100:
+            self.mp += 1
 
     def check_move(self, angle):
         new_x = self.x + math.cos(math.radians(angle)) * self.spd
