@@ -50,7 +50,7 @@ first_px = 350
 first_py = 350
 
 p_invincible_time = 120
-p_spd = 5
+p_spd = 7
 p_img_width = 75
 p_img_height = 150
 p_hit_width = 75
@@ -83,6 +83,7 @@ mp_position = [50, 60]
 
 onigiri_type = ["onigiri", "shine", "baked"]
 
+pad_radius = 120
 
 #ゲームインデックス
 title_index = 0
@@ -145,8 +146,17 @@ e_img_index_dead = {
     direction_up:{p_attack_values[0]:e_img_index_fire_up,p_attack_values[1]:e_img_index_thunder_up,p_attack_values[2]:e_img_index_wind_up},
     direction_left:{p_attack_values[0]:e_img_index_fire_left,p_attack_values[1]:e_img_index_thunder_left,p_attack_values[2]:e_img_index_wind_left}
     }
-e_king_index = list(range(32,35))
-e_hige_index = list(range(35,38))
+
+e_king_up_index = list(range(42,45))
+e_king_left_index = list(range(32,35))
+e_king_index = {direction_up:e_king_up_index, direction_left:e_king_left_index}
+
+e_hige_up_index = list(range(45,48)) #ラスト
+e_hige_left_index = list(range(35,38))
+e_hige_index = {direction_up:e_hige_up_index, direction_left:e_hige_left_index}
+
+e_up_fadeout_index = list(range(38,42))
+
 
 #アイテム画像インデックス
 wepon_img_index_up = {p_attack_values[0]:0, p_attack_values[1]:1, p_attack_values[2]:2}

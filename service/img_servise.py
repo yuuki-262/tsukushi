@@ -82,12 +82,25 @@ def load_enemy_imgs():
         pygame.image.load(dir_img_tsukushi + "死風左4" + png).convert_alpha(),
         pygame.image.load(dir_img_tsukushi + "死風左5" + png).convert_alpha(),
 
-        pygame.image.load(dir_img_tsukushi + "キングつくし1" + png).convert_alpha(),
-        pygame.image.load(dir_img_tsukushi + "キングつくし2" + png).convert_alpha(),
-        pygame.image.load(dir_img_tsukushi + "キングつくし3" + png).convert_alpha(),
-        pygame.image.load(dir_img_tsukushi + "ひげつくし1" + png).convert_alpha(),
-        pygame.image.load(dir_img_tsukushi + "ひげつくし2" + png).convert_alpha(),
-        pygame.image.load(dir_img_tsukushi + "ひげつくし3" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "キングつくし左1" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "キングつくし左2" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "キングつくし左3" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "ひげつくし左1" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "ひげつくし左2" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "ひげつくし左3" + png).convert_alpha(),
+
+        pygame.image.load(dir_img_tsukushi + "上消1" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "上消2" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "上消3" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "上消4" + png).convert_alpha(),
+
+        pygame.image.load(dir_img_tsukushi + "キングつくし上1" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "キングつくし上2" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "キングつくし上3" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "ひげつくし上1" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "ひげつくし上2" + png).convert_alpha(),
+        pygame.image.load(dir_img_tsukushi + "ひげつくし上3" + png).convert_alpha(),
+
     ]
 
 def load_item_imgs():

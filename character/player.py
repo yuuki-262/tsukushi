@@ -42,14 +42,14 @@ class player(character):
         self.is_death = False
         self.death_count = 0
 
-    def state(self, keys):
+    def state(self, angle):
         self.count += 1
         if not self.is_mp_heal and self.count > 60:
             self.is_mp_heal = True
         if self.is_wind:
             self.wind_state()
         if not self.is_death:
-            self.move(keys)
+            self.move(angle)
             if self.is_mp_heal:
                 self.auto_me_heal()
             #ダメージを受けているときは無敵
@@ -57,32 +57,38 @@ class player(character):
                 self.ghost()
 
     #位置情報の更新
-    def move(self, keys):
-        if self.is_attack == False:
-            if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
-                self.check_move(135)
-                self.direction = direction_left
-            elif keys[pygame.K_LEFT] and keys[pygame.K_DOWN]:
-                self.check_move(225)
-                self.direction = direction_left
-            elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
-                self.check_move(45)
-                self.direction = direction_right
-            elif keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
-                self.check_move(315)
-                self.direction = direction_right
-            elif keys[pygame.K_LEFT]:
-                self.check_move(180)
-                self.direction = direction_left
-            elif keys[pygame.K_RIGHT]:
-                self.check_move(0)
-                self.direction = direction_right
-            elif keys[pygame.K_UP]:
-                self.check_move(90)
-                self.direction = direction_up
-            elif keys[pygame.K_DOWN]:
-                self.check_move(270)
-                self.direction = direction_down
+    def move(self, angle):
+        if self.is_moving and not self.is_attack:
+            self.check_move(angle)
+
+
+    #位置情報の更新
+    # def move(self, keys):
+    #     if self.is_attack == False:
+    #         if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
+    #             self.check_move(135)
+    #             self.direction = direction_left
+    #         elif keys[pygame.K_LEFT] and keys[pygame.K_DOWN]:
+    #             self.check_move(225)
+    #             self.direction = direction_left
+    #         elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
+    #             self.check_move(45)
+    #             self.direction = direction_right
+    #         elif keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
+    #             self.check_move(315)
+    #             self.direction = direction_right
+    #         elif keys[pygame.K_LEFT]:
+    #             self.check_move(180)
+    #             self.direction = direction_left
+    #         elif keys[pygame.K_RIGHT]:
+    #             self.check_move(0)
+    #             self.direction = direction_right
+    #         elif keys[pygame.K_UP]:
+    #             self.check_move(90)
+    #             self.direction = direction_up
+    #         elif keys[pygame.K_DOWN]:
+    #             self.check_move(270)
+    #             self.direction = direction_down
 
     def get_img(self):
         if self.is_death:
@@ -93,7 +99,7 @@ class player(character):
                 return p_img_index_attack[self.direction][self.count // 10]
             self.is_attack = False
         if self.is_moving:
-            return p_img_index_move[self.direction][self.count % 80 // 20]
+            return p_img_index_move[self.direction][self.count % 40 // 10]
         num = self.count % 200 // 50
         if self.count % 200 > 109:
             num += 1
@@ -102,6 +108,8 @@ class player(character):
         return p_img_index_normal[self.direction][self.motion[num]]
 
     def attack(self):
+        if self.is_attack:
+            return
         if self.mp < self.use_attack_mp[self.attack_type]:
             return
         self.is_attack = True
@@ -140,14 +148,21 @@ class player(character):
             self.mp += 1
 
     def check_move(self, angle):
-        new_x = self.x + math.cos(math.radians(angle)) * self.spd
-        new_y = self.y - math.sin(math.radians(angle)) * self.spd
+        new_x = self.x + math.cos(angle) * self.spd
+        new_y = self.y - math.sin(angle) * self.spd
         if new_x > field_left + self.img_width / 2 and new_x < field_right - self.img_width / 2:
             self.x = new_x
         if new_y > field_top and new_y < field_bottom - self.img_height / 2:
             self.y = new_y
         self.is_moving = True
-
+        if angle <= (-3 * math.pi / 4) or angle >= (3 * math.pi / 4):
+            self.direction = direction_left
+        elif angle <= (-1 * math.pi / 4):
+            self.direction = direction_down
+        elif angle <= (1 * math.pi / 4):
+            self.direction = direction_right
+        elif angle <= (3 * math.pi / 4):
+            self.direction = direction_up
     def check_ghost(self):
         #ダメージを受けているときは10フレームごとに画像を点滅(True時に画像表示)
         return (not self.is_death and self.is_damaging and self.damage_count % 20 // 10 == 0)

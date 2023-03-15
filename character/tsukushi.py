@@ -22,6 +22,7 @@ class tsukushi(character):
             self.hit_width = 30
             self.hit_height = 80
 
+        self.is_fadeout = False
         self.is_ghost = False
         #攻撃の受けたつくしの無効化フラグ
         self.is_death = False
@@ -32,10 +33,13 @@ class tsukushi(character):
         self.img_name = ""
     def move(self, p):
         self.count += 1
-        if self.is_ghost:
+        if self.is_ghost and not self.is_fadeout:
             if self.count > 60:
                 self.is_ghost = False
-            self.x += self.spd * 2
+            if self.direction == direction_left:
+                self.x += self.spd * 2
+            elif self.direction == direction_up:
+                self.y += self.spd * 2
             return
         if self.is_death == True:
             self.count += 1
@@ -52,7 +56,13 @@ class tsukushi(character):
                 #     self.y += 1
 
             elif self.direction == direction_up:
-                self.y -= self.spd
+                if not self.is_fadeout:
+                    self.y -= self.spd
+                    if self.y <= 200:
+                        self.is_fadeout = True
+                        self.count = 0
+                if self.is_fadeout and self.count >= 40:
+                    self.is_del = True
                 #プレイヤーへの追跡
                 # if self.x > p.x:
                 #     self.x -= 1
@@ -81,10 +91,12 @@ class tsukushi(character):
             return
 
     def get_img(self):
-        if self.type == 2:
-            return e_king_index[self.count % 30 // 10]
-        if self.type == 1:
-            return e_hige_index[self.count % 30 // 10]
-        if self.is_death == True and self.death_type != "":
+        if self.is_death and self.death_type != "":
             return e_img_index_dead[self.direction][self.death_type][self.count % 50 // 10]
+        if self.is_fadeout and self.direction == direction_up:
+            return e_up_fadeout_index[self.count % 40 // 10]
+        if self.type == 2:
+            return e_king_index[self.direction][self.count % 30 // 10]
+        if self.type == 1:
+            return e_hige_index[self.direction][self.count % 30 // 10]
         return e_img_index_normal[self.direction][0]
