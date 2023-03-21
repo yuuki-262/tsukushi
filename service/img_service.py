@@ -103,6 +103,20 @@ def load_enemy_imgs():
 
     ]
 
+def load_boss_imgs():
+    return [
+        pygame.image.load(dir_img_boss + "UTD1" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD2" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD3" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD4" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD5" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD死1" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD死2" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD死3" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD死4" + png).convert_alpha(),
+        pygame.image.load(dir_img_boss + "UTD死5" + png).convert_alpha(),
+    ]
+
 def load_item_imgs():
     return [
         pygame.image.load(dir_img_item + "火メダル" + png).convert_alpha(),
@@ -174,4 +188,5 @@ def load_all_imgs():
             load_attack_imgs(),
             load_system_imgs(),
             load_field_imgs(),
+            load_boss_imgs(),
         ]

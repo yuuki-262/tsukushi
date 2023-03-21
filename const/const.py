@@ -11,6 +11,7 @@ dir_img_warui = dir_img_player + "warui/"
 dir_img_magic = dir_img_warui + "magic/"
 
 dir_img_tsukushi = dir_img_enemy + "tsukushi/"
+dir_img_boss = dir_img_enemy + "boss/"
 
 dir_background1_img = dir_img_field + "背景1.png"
 dir_field_img = dir_img_field + "フィールド.png"
@@ -50,7 +51,7 @@ first_px = 350
 first_py = 350
 
 p_invincible_time = 120
-p_spd = 7
+p_spd = 5
 p_img_width = 75
 p_img_height = 150
 p_hit_width = 75
@@ -98,6 +99,7 @@ item_imgs_index = 3
 attack_imgs_index = 4
 system_imgs_index = 5
 field_imgs_index = 6
+boss_imgs_index = 7
 
 #タイトル画像インデックス
 title_img_index_normal = 0
@@ -157,6 +159,9 @@ e_hige_index = {direction_up:e_hige_up_index, direction_left:e_hige_left_index}
 
 e_up_fadeout_index = list(range(38,42))
 
+#ボス画像インデックス
+b_img_index_utd = list(range(0,5))
+b_img_index_utd_dead = list(range(5,10))
 
 #アイテム画像インデックス
 wepon_img_index_up = {p_attack_values[0]:0, p_attack_values[1]:1, p_attack_values[2]:2}

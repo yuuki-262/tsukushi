@@ -1,12 +1,13 @@
 from character.base.character import character
 from const.const import *
+import random
 
 class tsukushi(character):
     def __init__(self, x, y, direction, type=0):
         self.x = x
         self.y = y
         #self.no = no
-        self.spd = 2
+        self.spd = random.randint(2,5)
         self.direction = direction
         self.count = 0
         self.type = type
@@ -37,9 +38,11 @@ class tsukushi(character):
             if self.count > 60:
                 self.is_ghost = False
             if self.direction == direction_left:
-                self.x += self.spd * 2
+                self.x += 2
+                self.spd = 2
             elif self.direction == direction_up:
-                self.y += self.spd * 2
+                self.y += 2
+                self.spd = 2
             return
         if self.is_death == True:
             self.count += 1

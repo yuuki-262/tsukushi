@@ -29,19 +29,18 @@ class wind(magic):
     def attack(self, enemies, player):
         player.is_wind = True
         self.count += 1
-        if self.count % 60 < 20:
+        if self.count % 90 < 30:
             self.x = player.x + 50
             self.y = player.y - 30
-        elif self.count % 60 < 40:
+        elif self.count % 90 < 60:
             self.x = player.x - 50
             self.y = player.y - 80
-        elif self.count % 60 < 60:
+        elif self.count % 90 <= 90:
             self.x = player.x - 50
             self.y = player.y + 50
-        if self.count >= 240:
+        if self.count >= 270:
             self.is_del = True
 
 
     def get_img(self):
-        num = self.count % 30 // 10
-        return warui_img_wind[self.direction][num]
+        return warui_img_wind[self.direction][self.count % 60 // 20]

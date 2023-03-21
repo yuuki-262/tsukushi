@@ -14,15 +14,13 @@ class heal_item(item):
         self.type = onigiri_type[type]
         self.is_del = False
 
-    def get(self, player):
+    def get(self, player: player):
         if self.type == "onigiri":
-            player.hp += 10
+            player.hp.change_hp(10)
         elif self.type == "shine":
-            player.hp += 50
+            player.hp.change_hp(50)
         elif self.type == "baked":
-            player.hp += 20
-        if player.hp > player.max_hp:
-            player.hp = player.max_hp
+            player.hp.change_hp(20)
         self.is_del = True
 
     def get_img(self, player :player):
