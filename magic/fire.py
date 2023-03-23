@@ -27,13 +27,13 @@ class fire(magic):
             self.x = x + 80
 
 
-    def attack(self, enemies, player = None):
+    def attack(self, pygame, enemies, player = None):
         self.count += 1
         if self.count < 20:
         #つくしのヒット処理
             for e in enemies:
                 if e.is_death == False and is_hitting(self, e):
-                    e.damage(self.name)
+                    e.damage(pygame, self.name)
                     #score += 1
         if self.count >= 30:
             self.is_del = True

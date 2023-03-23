@@ -1,6 +1,7 @@
 from item.base.item import item
 from const.const import *
 from character.player import player
+from service.service import sound_se
 
 class heal_item(item):
     def __init__(self, x, y, type):
@@ -14,13 +15,14 @@ class heal_item(item):
         self.type = onigiri_type[type]
         self.is_del = False
 
-    def get(self, player: player):
+    def get(self, pygame, player: player):
         if self.type == "onigiri":
             player.hp.change_hp(10)
         elif self.type == "shine":
             player.hp.change_hp(50)
         elif self.type == "baked":
             player.hp.change_hp(20)
+        sound_se(pygame, dir_SE + "Heal.wav")
         self.is_del = True
 
     def get_img(self, player :player):

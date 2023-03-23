@@ -10,5 +10,7 @@ def is_hitting(c1:object, c2:object):
 def direction_adjast(obj: object):
     return (obj.x - (obj.img_width / 2), obj.y - (obj.img_height / 2))
 
-
+def sound_se(pygame, se_name):
+    pygame.mixer.music.load(se_name)
+    pygame.mixer.music.play()
 

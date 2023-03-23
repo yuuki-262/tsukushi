@@ -1,5 +1,8 @@
 #画像ディレクトリ
 dir_img = "img/"
+dir_music = "music/"
+dir_SE = dir_music + "SE/"
+
 dir_img_title = "img/title/"
 dir_img_player = "img/player/"
 dir_img_enemy = "img/enemy/"
@@ -19,6 +22,8 @@ dir_hp_bar_img = dir_img_system + "HPバー.png"
 dir_hp_img = dir_img_system + "HP.png"
 dir_mp_bar_img = dir_img_system + "MPバー.png"
 dir_mp_img = dir_img_system + "MP.png"
+
+
 
 #方向
 direction_up = "上"
@@ -51,7 +56,7 @@ first_px = 350
 first_py = 350
 
 p_invincible_time = 120
-p_spd = 5
+p_spd = 7
 p_img_width = 75
 p_img_height = 150
 p_hit_width = 75
@@ -59,7 +64,7 @@ p_hit_height = 150
 
 p_fire_use_mp = 10
 p_thunder_use_mp = 20
-p_wind_use_mp = 70
+p_wind_use_mp = 60
 
 p_attack_values = ["火", "雷", "風"]
 

@@ -8,7 +8,7 @@ from const.const import *
 from character.player import player as player_c
 from item.weapon import weapon
 from item.heal_item import heal_item
-from service.service import is_hitting, direction_adjast
+from service.service import is_hitting, direction_adjast, sound_se
 from service.img_service import *
 from character.enemy.tsukushi import tsukushi
 from character.enemy.boss.UTD import UTD
@@ -16,6 +16,7 @@ from character.enemy.boss.UTD import UTD
 index = title_index
 count = 0
 is_mouse_down = False
+is_mouse_play = False
 angle = 0
 small_position = (pad_radius , screen_height - pad_radius)
 score = 0
@@ -59,6 +60,7 @@ def main():
                 if event.type == pygame.KEYDOWN and count > 120:
                     index = 1
                     count = 0
+                    sound_se(pygame, dir_SE + "GameStart.wav")
             pygame.display.update()
             clock.tick(60)
             continue
@@ -84,7 +86,7 @@ def main():
 
 
 def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
-    global count, mouse_position_base, is_mouse_down, angle, small_position, mouse_down_count, score
+    global count, mouse_position_base, is_mouse_down, is_mouse_play, angle, small_position, mouse_down_count, score
 
     player_imgs = imgs[player_imgs_index]
     enemy_imgs = imgs[enemy_imgs_index]
@@ -93,6 +95,9 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
     warui_magic_imgs = imgs[attack_imgs_index]
     system_imgs = imgs[system_imgs_index]
     field_imgs = imgs[field_imgs_index]
+
+    # 円を描く
+    circle_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
 
     #キャラクター死亡時
     if player.is_death:
@@ -105,19 +110,19 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
+            is_mouse_play = False
             if event.key == pygame.K_SPACE:
-                #pygame.mixer.music.load("Explosion16.wav")
-                #pygame.mixer.music.play(1)
-                player.attack()
+                player.attack(pygame)
         if event.type == pygame.KEYUP:
             player.is_moving = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             is_mouse_down = True
+            is_mouse_play = True
         if event.type == pygame.MOUSEBUTTONUP:
             is_mouse_down = False
             player.is_moving = False
             if mouse_down_count <= 2:
-                player.attack()
+                player.attack(pygame)
             mouse_down_count = 0
 
     #通常時
@@ -142,7 +147,7 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
     for i in items:
         i.state()
         if is_hitting(player, i):
-            i.get(player)
+            i.get(pygame, player)
         if i.is_del:
             items.remove(i)
             continue
@@ -159,7 +164,7 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
         else:
             num = 2
         if random.randint(0,1) == 0:
-            if len(bosses) == 0 and score % 10 == 0:
+            if len(bosses) == 0 and score % 10 == 20:
                 bosses.append(UTD())
             enemies.append(tsukushi(field_right, random.randint(field_top, field_bottom), direction_left, num))
         else:
@@ -176,7 +181,7 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
         if is_hitting(player, b) and not b.is_ghost:
             #敵に当たっている時
             if player.is_wind:
-                b.damage(p_attack_values[2])
+                b.damage(pygame, p_attack_values[2])
             elif b.is_death:
                 pass
             else:
@@ -207,11 +212,11 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
             if is_hitting(player, e) and not e.is_ghost and not e.is_fadeout:
                 #敵に当たっている時
                 if player.is_wind:
-                    e.damage(p_attack_values[2])
+                    e.damage(pygame, p_attack_values[2])
                 elif e.is_death:
                     pass
                 else:
-                    player.hit_enemy()
+                    player.hit_enemy(pygame)
                     enemies.remove(e)
                     continue
         if not e.is_ghost or e.count % 30 // 15 == 0:
@@ -220,8 +225,8 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
 
     #魔法の処理
     for m in player.magics:
-        m.attack(enemies, player)
-        m.attack(bosses, player)
+        m.attack(pygame, enemies, player)
+        m.attack(pygame, bosses, player)
         if not m.is_del:
             screen.blit(warui_magic_imgs[m.get_img()], direction_adjast(m))
         else:
@@ -245,11 +250,12 @@ def in_game(screen, font, player: player_c, enemies, bosses, items, imgs):
             pass
         else:
             small_position = (radius , screen_height - radius)
-    # 円を描く
-    circle_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
-    pygame.draw.circle(circle_surface, (0, 0, 0, 50), (radius, screen_height - radius), radius, pygame.SRCALPHA)
-    pygame.draw.circle(circle_surface, (255, 255, 255, 80), small_position, radius_small, pygame.SRCALPHA)
-    screen.blit(circle_surface, (0, 0))
+
+    if is_mouse_play:
+        pygame.draw.circle(circle_surface, (0, 0, 0, 50), (radius, screen_height - radius), radius, pygame.SRCALPHA)
+        pygame.draw.circle(circle_surface, (255, 255, 255, 80), small_position, radius_small, pygame.SRCALPHA)
+        screen.blit(circle_surface, (0, 0))
+
     mouse_position_base = pygame.mouse.get_pos()
 
     pygame.display.update()

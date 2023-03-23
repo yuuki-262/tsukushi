@@ -26,7 +26,7 @@ class wind(magic):
             self.x = x + 80
 
 
-    def attack(self, enemies, player):
+    def attack(self, pygame, enemies, player):
         player.is_wind = True
         self.count += 1
         if self.count % 90 < 30:

@@ -3,6 +3,7 @@ import math
 
 from character.base.character import character
 from const.const import *
+from service.service import sound_se
 
 from item.base.item import item
 from magic.fire import fire
@@ -86,35 +87,6 @@ class player(character):
                 self.check_move(math.radians(270))
                 self.direction = direction_down
 
-
-    #位置情報の更新
-    # def move(self, keys):
-        # if self.is_attack == False:
-        #     if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
-        #         self.check_move(135)
-        #         self.direction = direction_left
-        #     elif keys[pygame.K_LEFT] and keys[pygame.K_DOWN]:
-        #         self.check_move(225)
-        #         self.direction = direction_left
-        #     elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
-        #         self.check_move(45)
-        #         self.direction = direction_right
-        #     elif keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
-        #         self.check_move(315)
-        #         self.direction = direction_right
-        #     elif keys[pygame.K_LEFT]:
-        #         self.check_move(180)
-        #         self.direction = direction_left
-        #     elif keys[pygame.K_RIGHT]:
-        #         self.check_move(0)
-        #         self.direction = direction_right
-        #     elif keys[pygame.K_UP]:
-        #         self.check_move(90)
-        #         self.direction = direction_up
-        #     elif keys[pygame.K_DOWN]:
-        #         self.check_move(270)
-        #         self.direction = direction_down
-
     def get_img(self):
         if self.is_death:
             return p_img_index_dead[0 if self.death_count < 50 else 1]
@@ -132,7 +104,7 @@ class player(character):
             num += 1
         return p_img_index_normal[self.direction][self.motion[num]]
 
-    def attack(self):
+    def attack(self, pygame):
         if self.is_attack:
             return
         if self.mp.mp < self.use_attack_mp[self.attack_type]:
@@ -143,23 +115,19 @@ class player(character):
         self.mp.change_mp(-1 * self.use_attack_mp[self.attack_type])
         if self.mp.mp <= 0:
             self.mp.mp = 0
-        if self.attack_values[self.attack_type] == "火":
-            self.magics.append(fire(self.x, self.y, self.direction))
-        elif self.attack_values[self.attack_type] == "雷":
-            self.magics.append(thunder(self.x, self.y, self.direction))
-        elif self.attack_values[self.attack_type] == "風":
-            self.magics.append(wind(self.x, self.y, self.direction))
+        self.add_magic(pygame)
 
-    def hit_enemy(self):
+    def hit_enemy(self, pygame):
         if not self.is_damaging:
             self.hp.change_hp(-25)
+            sound_se(pygame, dir_SE + "Damage.wav")
             self.is_damaging = True
 
         if self.hp.hp == 0:
             #死んだときの処理
             self.count = 0
             self.is_death = True
-
+            sound_se(pygame, dir_SE + "Down.wav")
     def ghost(self):
         self.damage_count += 1
 
@@ -196,3 +164,14 @@ class player(character):
         if self.wind_count > 300:
             self.wind_count = 0
             self.is_wind = False
+
+    def add_magic(self, pygame):
+        if self.attack_values[self.attack_type] == "火":
+            self.magics.append(fire(self.x, self.y, self.direction))
+            sound_se(pygame, dir_SE + "Fire.wav")
+        elif self.attack_values[self.attack_type] == "雷":
+            self.magics.append(thunder(self.x, self.y, self.direction))
+            sound_se(pygame, dir_SE + "Thunder.wav")
+        elif self.attack_values[self.attack_type] == "風":
+            self.magics.append(wind(self.x, self.y, self.direction))
+            sound_se(pygame, dir_SE + "wind.wav")

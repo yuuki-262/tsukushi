@@ -1,4 +1,5 @@
 from character.base.character import character
+from service.service import sound_se
 from const.const import *
 import random
 
@@ -7,7 +8,7 @@ class tsukushi(character):
         self.x = x
         self.y = y
         #self.no = no
-        self.spd = random.randint(2,5)
+        self.spd = random.randint(3,6)
         self.direction = direction
         self.count = 0
         self.type = type
@@ -72,7 +73,7 @@ class tsukushi(character):
                 # elif self.x < p.x:
                 #     self.x += 1
 
-    def damage(self, attack_type):
+    def damage(self, pygame, attack_type):
         if self.is_ghost or self.is_death:
             return
         if self.type == 2:
@@ -80,17 +81,20 @@ class tsukushi(character):
             self.name = tsukushi_types[self.type]
             self.is_ghost = True
             self.count = 0
+            sound_se(pygame, dir_SE + "HitAttack.wav")
             return
         if self.type == 1:
             self.type -= 1
             self.name = tsukushi_types[self.type]
             self.is_ghost = True
             self.count = 0
+            sound_se(pygame, dir_SE + "HitAttack.wav")
             return
         if self.type == 0:
             self.death_type = attack_type
             self.is_death = True
             self.count = 0
+            sound_se(pygame, dir_SE + "HitAttack.wav")
             return
 
     def get_img(self):

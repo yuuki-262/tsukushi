@@ -33,7 +33,7 @@ class thunder(magic):
             self.x = x + 80
 
 
-    def attack(self, enemies, player = None):
+    def attack(self, pygame, enemies, player = None):
         self.count += 1
         if self.direction == direction_up:
             self.y = self.y - self.spd
@@ -55,7 +55,7 @@ class thunder(magic):
                 # BOX2 = pygame.Rect(e.x - (e.width / 2), e.y - (e.height / 2) , e.width, e.height)
                 # pygame.draw.rect(screen,RED, BOX1)
                 # pygame.draw.rect(screen,GREEN, BOX2)
-                e.damage(self.name)
+                e.damage(pygame, self.name)
                 #score += 1
         if (self.x < field_left - (self.img_width / 2)
                 or self.x > field_right + (self.img_width / 2)
