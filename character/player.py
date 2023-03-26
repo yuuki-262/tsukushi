@@ -20,8 +20,8 @@ class player(character):
         self.spd = p_spd
         self.img_width = p_img_width
         self.img_height = p_img_height
-        self.hit_width = p_hit_width
-        self.hit_height = p_hit_height
+        self.hit_width = 75
+        self.hit_height = 75
         self.count = 0
         self.damage_count = 0
         self.wind_count = 0

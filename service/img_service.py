@@ -167,10 +167,17 @@ def load_title_imgs():
 
 def load_system_imgs():
     return [
-        pygame.image.load(dir_hp_bar_img).convert_alpha(),
-        pygame.image.load(dir_hp_img).convert_alpha(),
-        pygame.image.load(dir_mp_bar_img).convert_alpha(),
-        pygame.image.load(dir_mp_img).convert_alpha(),
+        pygame.image.load(dir_img_system + "HPMPバー" + png).convert_alpha(),
+        pygame.image.load(dir_img_system + "HPMPバー下地.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "HP.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "MP.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "不足MP.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "火.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "雷.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "風.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "覚醒.png").convert_alpha(),
+        pygame.image.load(dir_img_system + "覚醒蓋.png").convert_alpha(),
+
         pygame.image.load(dir_background1_img).convert_alpha(),
     ]
 

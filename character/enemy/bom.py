@@ -3,12 +3,12 @@ from service.service import sound_se
 from const.const import *
 import random
 
-class tsukushi(character):
+class bom(character):
     def __init__(self, x, y, direction, type=0):
         self.x = x
         self.y = y
         #self.no = no
-        self.spd = random.randint(3,5)
+        self.spd = random.randint(3,6)
         self.direction = direction
         self.count = 0
         self.type = type

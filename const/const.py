@@ -18,10 +18,6 @@ dir_img_boss = dir_img_enemy + "boss/"
 
 dir_background1_img = dir_img_field + "背景1.png"
 dir_field_img = dir_img_field + "フィールド.png"
-dir_hp_bar_img = dir_img_system + "HPバー.png"
-dir_hp_img = dir_img_system + "HP.png"
-dir_mp_bar_img = dir_img_system + "MPバー.png"
-dir_mp_img = dir_img_system + "MP.png"
 
 
 
@@ -73,13 +69,13 @@ tsukushi_types = ["つくし", "キング", "ひげ"]
 
 #システム
 hp_width = 350
-hp_width_left = 20
+hp_width_left = 145
 hp_width_right = 20
 hp_width_middle = hp_width - hp_width_left - hp_width_right
 hp_height = 100
 
 mp_width = 350
-mp_width_left = 20
+mp_width_left = 145
 mp_width_right = 20
 mp_width_middle = mp_width - mp_width_left - mp_width_right
 mp_height = 100
@@ -111,11 +107,15 @@ title_img_index_normal = 0
 title_text1_img_index = 1
 
 #システム画像インデックス
-hp_bar_img_index = 0
-hp_img_index = 1
-mp_bar_img_index = 2
+hpmp_bar_img_index = 0
+hpmp_bar_under_img_index = 1
+hp_img_index = 2
 mp_img_index = 3
-bg_img_index_normal = 4
+no_mp_img_index = 4
+bar_warui_magic_img_index = list(range(5,8))
+awake_index = 8
+awake_cover_index = 9
+bg_img_index_normal = 10
 
 #プレイヤー画像インデックス
 p_img_index_up = list(range(0,3))
