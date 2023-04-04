@@ -302,7 +302,7 @@ class Game:
         screen.blit(system_imgs[awake_cover_index], hp_position)
         screen.blit(system_imgs[hp_img_index].subsurface(pygame.Rect(0, 0, hp_width_left + (hp_width_middle * self.player.hp.hp / self.player.hp.max_hp), system_imgs[hp_img_index].get_height())), hp_position)
         screen.blit(system_imgs[hpmp_bar_img_index], hp_position)
-        target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
+        target_number_font = pygame.font.Font(None, 50)
         if self.target_number - self.score > 0:
             text = target_number_font.render("あと" + str(self.target_number - self.score) + "体倒せ！！" , True, (0,0,0))
             screen.blit(text, [400, 0])
