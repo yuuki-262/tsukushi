@@ -1,13 +1,15 @@
 from magic.base.magic import magic
 from const.const import *
 
-from service.service import is_hitting
+from service.service import is_hitting_circle_rect
 
 class thunder(magic):
     def __init__(self, x, y, direction):
         self.name = "雷"
         self.x = x
         self.y = y
+        self.r = thunder_hit_circle_r
+        self.angle = 0
         self.spd = 10
         self.use_mp = 20
         self.direction = direction
@@ -46,7 +48,7 @@ class thunder(magic):
 
         #つくしのヒット処理
         for e in enemies:
-            if e.is_death == False and is_hitting(self, e):
+            if e.is_death == False and is_hitting_circle_rect(self, e):
                 # 当たり判定可視化
                 # import pygame
                 # RED = (200, 0, 0)
@@ -55,7 +57,7 @@ class thunder(magic):
                 # BOX2 = pygame.Rect(e.x - (e.width / 2), e.y - (e.height / 2) , e.width, e.height)
                 # pygame.draw.rect(screen,RED, BOX1)
                 # pygame.draw.rect(screen,GREEN, BOX2)
-                e.damage(pygame, self.name)
+                e.damage(pygame, self.name, player)
                 #score += 1
         if (self.x < field_left - (self.img_width / 2)
                 or self.x > field_right + (self.img_width / 2)

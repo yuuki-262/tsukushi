@@ -55,8 +55,7 @@ p_invincible_time = 120
 p_spd = 7
 p_img_width = 75
 p_img_height = 150
-p_hit_width = 75
-p_hit_height = 150
+p_hit_circle_r = 35
 
 p_fire_use_mp = 10
 p_thunder_use_mp = 20
@@ -64,24 +63,35 @@ p_wind_use_mp = 60
 
 p_attack_values = ["火", "雷", "風"]
 
+fire_hit_circle_r = 80
+thunder_hit_circle_r = 50
+wind_hit_circle_r = 50
+
+
 #敵
 tsukushi_types = ["つくし", "キング", "ひげ"]
 
 #システム
 hp_width = 350
 hp_width_left = 145
-hp_width_right = 20
+hp_width_right = 10
 hp_width_middle = hp_width - hp_width_left - hp_width_right
 hp_height = 100
 
 mp_width = 350
 mp_width_left = 145
-mp_width_right = 20
+mp_width_right = 10
 mp_width_middle = mp_width - mp_width_left - mp_width_right
 mp_height = 100
 
 hp_position = [50, 10]
 mp_position = [50, 60]
+
+#敵の沸く頻度(Nフレームに1キャラ)
+pop_enemy_span = 15
+
+#落ちるアイテムの最大数
+drop_item = 5
 
 onigiri_type = ["onigiri", "shine", "baked"]
 
@@ -148,19 +158,21 @@ e_img_index_thunder_left = list(range(22,27))
 e_img_index_wind_left = list(range(27,32))
 
 
-e_img_index_normal = {direction_up:e_img_index_up, direction_left:e_img_index_left}
+e_img_index_normal = {direction_up:e_img_index_up, direction_left:e_img_index_left,direction_down:e_img_index_up, direction_right:e_img_index_left}
 e_img_index_dead = {
+    direction_up:{p_attack_values[0]:e_img_index_fire_up,p_attack_values[1]:e_img_index_thunder_up,p_attack_values[2]:e_img_index_wind_up},
+    direction_left:{p_attack_values[0]:e_img_index_fire_left,p_attack_values[1]:e_img_index_thunder_left,p_attack_values[2]:e_img_index_wind_left},
     direction_up:{p_attack_values[0]:e_img_index_fire_up,p_attack_values[1]:e_img_index_thunder_up,p_attack_values[2]:e_img_index_wind_up},
     direction_left:{p_attack_values[0]:e_img_index_fire_left,p_attack_values[1]:e_img_index_thunder_left,p_attack_values[2]:e_img_index_wind_left}
     }
 
 e_king_up_index = list(range(42,45))
 e_king_left_index = list(range(32,35))
-e_king_index = {direction_up:e_king_up_index, direction_left:e_king_left_index}
+e_king_index = {direction_up:e_king_up_index, direction_left:e_king_left_index,direction_down:e_king_up_index, direction_right:e_king_left_index}
 
 e_hige_up_index = list(range(45,48)) #ラスト
 e_hige_left_index = list(range(35,38))
-e_hige_index = {direction_up:e_hige_up_index, direction_left:e_hige_left_index}
+e_hige_index = {direction_up:e_hige_up_index, direction_left:e_hige_left_index,direction_down:e_hige_up_index, direction_right:e_hige_left_index}
 
 e_up_fadeout_index = list(range(38,42))
 

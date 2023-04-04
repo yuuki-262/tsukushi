@@ -17,6 +17,8 @@ class player(character):
     def __init__(self, x, y):
         self.x = x
         self.y = field_position[1] + y
+        self.r = p_hit_circle_r
+        self.angle = 0
         self.spd = p_spd
         self.img_width = p_img_width
         self.img_height = p_img_height
@@ -24,20 +26,19 @@ class player(character):
         self.hit_height = 75
         self.count = 0
         self.damage_count = 0
-        self.wind_count = 0
         self.direction = direction_down
 
         self.hp = hp(100)
         self.mp = mp(100)
 
-        self.attack_type = 1
+        self.attack_type = 2
         self.attack_values = p_attack_values
         self.use_attack_mp = [p_fire_use_mp, p_thunder_use_mp, p_wind_use_mp]
         self.magics = []
         self.motion = [0, 1, 0, 2, 0, 1]
         self.is_moving = False
         self.is_attack = False
-        self.is_wind = False
+
         self.is_damaging = False
         self.is_mp_heal = True
         self.is_death = False
@@ -47,8 +48,6 @@ class player(character):
         self.count += 1
         if not self.is_mp_heal and self.count > 60:
             self.is_mp_heal = True
-        if self.is_wind:
-            self.wind_state()
         if not self.is_death:
             self.move(angle, keys)
             if self.is_mp_heal:
@@ -92,8 +91,8 @@ class player(character):
             return p_img_index_dead[0 if self.death_count < 50 else 1]
             #return dir_img_warui + "ダウン" + str(1 if self.count < 50 else 2) + png
         if self.is_attack:
-            if self.count < 20:
-                return p_img_index_attack[self.direction][self.count // 10]
+            if self.count < 10:
+                return p_img_index_attack[self.direction][self.count // 5]
             self.is_attack = False
         if self.is_moving:
             return p_img_index_move[self.direction][self.count % 40 // 10]
@@ -108,6 +107,7 @@ class player(character):
         if self.is_attack:
             return
         if self.mp.mp < self.use_attack_mp[self.attack_type]:
+            sound_se(pygame, dir_SE + "NoMP.wav")
             return
         self.is_attack = True
         self.count = 0
@@ -122,16 +122,15 @@ class player(character):
             self.hp.change_hp(-25)
             sound_se(pygame, dir_SE + "Damage.wav")
             self.is_damaging = True
-
         if self.hp.hp == 0:
             #死んだときの処理
             self.count = 0
             self.is_death = True
             sound_se(pygame, dir_SE + "Down.wav")
+
     def ghost(self):
         self.damage_count += 1
-
-        if self.damage_count >= 120:
+        if self.damage_count >= 60:
             self.damage_count = 0
             self.is_damaging = False
 
@@ -155,15 +154,10 @@ class player(character):
             self.direction = direction_right
         elif angle <= (3 * math.pi / 4):
             self.direction = direction_up
+
     def check_ghost(self):
         #ダメージを受けているときは10フレームごとに画像を点滅(True時に画像表示)
         return (not self.is_death and self.is_damaging and self.damage_count % 20 // 10 == 0)
-
-    def wind_state(self):
-        self.wind_count += 1
-        if self.wind_count > 300:
-            self.wind_count = 0
-            self.is_wind = False
 
     def add_magic(self, pygame):
         if self.attack_values[self.attack_type] == "火":
@@ -174,4 +168,4 @@ class player(character):
             sound_se(pygame, dir_SE + "Thunder.wav")
         elif self.attack_values[self.attack_type] == "風":
             self.magics.append(wind(self.x, self.y, self.direction))
-            sound_se(pygame, dir_SE + "wind.wav")
+            sound_se(pygame, dir_SE + "Wind.wav")

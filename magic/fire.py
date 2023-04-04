@@ -1,13 +1,15 @@
 from magic.base.magic import magic
 from const.const import *
 
-from service.service import is_hitting
+from service.service import is_hitting_circle_rect
 
 class fire(magic):
     def __init__(self, x, y, direction):
         self.name = "火"
         self.x = x
         self.y = y
+        self.r = fire_hit_circle_r
+        self.angle = 0
         self.spd = 3
         self.use_mp = 10
         self.img_width = 75
@@ -32,8 +34,8 @@ class fire(magic):
         if self.count < 20:
         #つくしのヒット処理
             for e in enemies:
-                if e.is_death == False and is_hitting(self, e):
-                    e.damage(pygame, self.name)
+                if e.is_death == False and is_hitting_circle_rect(self, e):
+                    e.damage(pygame, self.name, player)
                     #score += 1
         if self.count >= 30:
             self.is_del = True

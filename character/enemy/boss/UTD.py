@@ -7,6 +7,7 @@ class UTD(character):
     def __init__(self):
         self.x = field_width-1
         self.y = 500
+        self.angle = 0
         #self.no = no
         self.spd = 1
         self.direction = direction_left
@@ -15,10 +16,10 @@ class UTD(character):
         self.name = "アルティメットつくしドラゴン"
         self.img_width = 800
         self.img_height = 1000
-        self.hit_width = 500
+        self.hit_width = 400
         self.hit_height = 1000
 
-        self.hp = hp(100)
+        self.hp = hp(40)
 
         self.is_fadeout = False
         self.is_ghost = False

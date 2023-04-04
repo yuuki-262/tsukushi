@@ -1,12 +1,18 @@
+import math
+
 from magic.base.magic import magic
 from const.const import *
-from service.service import is_hitting
+from service.service import is_hitting_circle_rect
 
 class wind(magic):
     def __init__(self, x, y, direction):
         self.name = "風"
         self.x = x
         self.y = y
+        self.r = wind_hit_circle_r
+        self.angle = 0
+        self.warui_angle = 0
+        self.warui_distance = 100
         self.spd = 3
         self.use_mp = 70
         self.img_width = 75
@@ -27,18 +33,23 @@ class wind(magic):
 
 
     def attack(self, pygame, enemies, player):
-        player.is_wind = True
         self.count += 1
-        if self.count % 90 < 30:
-            self.x = player.x + 50
-            self.y = player.y - 30
-        elif self.count % 90 < 60:
-            self.x = player.x - 50
-            self.y = player.y - 80
-        elif self.count % 90 <= 90:
-            self.x = player.x - 50
-            self.y = player.y + 50
-        if self.count >= 270:
+        self.warui_angle += 3
+        self.x = player.x + self.warui_distance * math.cos(math.radians(self.warui_angle))
+        self.y = player.y + self.warui_distance * math.sin(math.radians(self.warui_angle))
+        for e in enemies:
+            if e.is_death == False and is_hitting_circle_rect(self, e):
+                e.damage(pygame, self.name, player)
+        # if self.count % 90 < 30:
+        #     self.x = player.x + 50
+        #     self.y = player.y - 30
+        # elif self.count % 90 < 60:
+        #     self.x = player.x - 50
+        #     self.y = player.y - 80
+        # elif self.count % 90 <= 90:
+        #     self.x = player.x - 50
+        #     self.y = player.y + 50
+        if self.count >= 1000:
             self.is_del = True
 
 
