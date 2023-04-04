@@ -226,7 +226,7 @@ class Game:
             if not b.is_ghost or b.count % 30 // 15 == 0:
                 draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
         draw_object(pygame, screen, self.player, imgs[player_imgs_index][self.player.get_img()])
-        clear_font = pygame.font.Font("JKG-L_3.ttf", 50)
+        clear_font = pygame.font.Font(None, 50)
         text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
         screen.blit(text, [220, 450])
         pygame.display.update()
