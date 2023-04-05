@@ -10,7 +10,7 @@ class tsukushi(character):
         self.x = x
         self.y = y
         self.angle = 0
-        self.knock_back_angle = 0
+        self.knock_back_distance = {"x" : 0, "y" : 0}
         self.spd = random.randint(2,5)
         self.direction = direction
         self.count = 0
@@ -71,21 +71,8 @@ class tsukushi(character):
     def damage(self, pygame, attack_type, p : player):
         if self.is_ghost or self.is_death:
             return
-        if self.type == 2:
-            self.type -= 1
-            self.name = tsukushi_types[self.type]
-            self.is_ghost = True
-            self.count = 0
-            self.knock_back_angle = math.degrees(math.atan2(-1 * (self.y - p.y), (self.x - p.x))) + 180
-            sound_se(pygame, dir_SE + "HitAttack.wav")
-            return
-        if self.type == 1:
-            self.type -= 1
-            self.name = tsukushi_types[self.type]
-            self.is_ghost = True
-            self.count = 0
-            self.knock_back_angle = math.degrees(math.atan2(-1 * (self.y - p.y), (self.x - p.x))) + 180
-            sound_se(pygame, dir_SE + "HitAttack.wav")
+        if self.type == 2 or self.type == 1:
+            self.level_down(pygame, p)
             return
         if self.type == 0:
             self.death_type = attack_type
@@ -97,8 +84,13 @@ class tsukushi(character):
     def knock_back(self, p: player):
         if self.count > 40:
             self.is_ghost = False
-        self.x += 2 * math.cos(self.knock_back_angle)
-        self.y += 2 * math.sin(self.knock_back_angle)
+        self.x += 2 * self.knock_back_distance["x"]
+        self.y += 2 * self.knock_back_distance["y"]
+        if self.y < field_top:
+            self.is_del = True
+            self.is_fadeout = True
+        # self.x += 2 * math.cos(self.knock_back_angle)
+        # self.y += 2 * math.sin(self.knock_back_angle)
         # if p.direction == direction_up:
         #     self.y -= 2
         #     self.spd = 2
@@ -111,6 +103,17 @@ class tsukushi(character):
         # elif p.direction == direction_right:
         #     self.x += 2
         #     self.spd = 2
+
+    def level_down(self, pygame, p:player):
+        self.type -= 1
+        self.name = tsukushi_types[self.type]
+        self.is_ghost = True
+        self.count = 0
+
+        distance = math.sqrt((self.x - p.x)**2 + (self.y - p.y)**2)
+        self.knock_back_distance["x"] = (self.x - p.x) / distance
+        self.knock_back_distance["y"] = (self.y - p.y) / distance
+        sound_se(pygame, dir_SE + "HitAttack.wav")
 
     def get_img(self):
         if self.is_death and self.death_type != "":

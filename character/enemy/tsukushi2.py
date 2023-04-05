@@ -87,7 +87,7 @@ class tsukushi(character):
                 # elif self.x < p.x:
                 #     self.x += 1
 
-    def damage(self, pygame, attack_type):
+    def damage(self, pygame, attack_type, player):
         if self.is_ghost or self.is_death:
             return
         if self.type == 2:

@@ -86,7 +86,7 @@ mp_height = 100
 
 hp_position = [50, 10]
 mp_position = [50, 60]
-
+boss_hp_position = [0, 900]
 #敵の沸く頻度(Nフレームに1キャラ)
 pop_enemy_span = 15
 
@@ -126,6 +126,11 @@ bar_warui_magic_img_index = list(range(5,8))
 awake_index = 8
 awake_cover_index = 9
 bg_img_index_normal = 10
+
+boss_hp_bar_img_index = 11
+boss_hp_img_index = 12
+result_img_index = 13
+result_back_img_index = 14
 
 #プレイヤー画像インデックス
 p_img_index_up = list(range(0,3))

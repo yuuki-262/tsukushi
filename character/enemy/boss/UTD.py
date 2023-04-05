@@ -19,7 +19,7 @@ class UTD(character):
         self.hit_width = 400
         self.hit_height = 1000
 
-        self.hp = hp(40)
+        self.hp = hp(100)
 
         self.is_fadeout = False
         self.is_ghost = False
@@ -45,7 +45,7 @@ class UTD(character):
             # if self.is_fadeout and self.count >= 40:
             #     self.is_del = True
 
-    def damage(self, pygame, type):
+    def damage(self, pygame, type, player):
         if not self.is_ghost and not self.is_death:
             self.hp.change_hp(-20)
             if self.hp.hp == 0:

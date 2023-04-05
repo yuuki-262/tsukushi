@@ -17,12 +17,13 @@ class Game:
     def __init__(self):
         self.index = title_index
         self.count = 0
+        self.clear_count = 0
         self.is_mouse_down = False
         self.is_mouse_play = False
         self.angle = 0
         self.small_position = (pad_radius, screen_height - pad_radius)
         self.score = 0
-        self.target_number = 999
+        self.target_number = 3
         self.title_index = title_img_index_normal
         self.field_index = field_img_index_normal
         self.bg_index = bg_img_index_normal
@@ -80,7 +81,6 @@ class Game:
 
             # 円を描く
             circle_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
-
 
             #通常時
             pressed_key = pygame.key.get_pressed()
@@ -226,8 +226,10 @@ class Game:
             if not b.is_ghost or b.count % 30 // 15 == 0:
                 draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
         draw_object(pygame, screen, self.player, imgs[player_imgs_index][self.player.get_img()])
-        clear_font = pygame.font.Font(None, 50)
-        text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
+        screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
+        screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
+        clear_font = pygame.font.Font("JKG-L_3.ttf", 50)
+        #text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
         screen.blit(text, [220, 450])
         pygame.display.update()
 
@@ -302,13 +304,16 @@ class Game:
         screen.blit(system_imgs[awake_cover_index], hp_position)
         screen.blit(system_imgs[hp_img_index].subsurface(pygame.Rect(0, 0, hp_width_left + (hp_width_middle * self.player.hp.hp / self.player.hp.max_hp), system_imgs[hp_img_index].get_height())), hp_position)
         screen.blit(system_imgs[hpmp_bar_img_index], hp_position)
-        target_number_font = pygame.font.Font(None, 50)
+        target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
         if self.target_number - self.score > 0:
             text = target_number_font.render("あと" + str(self.target_number - self.score) + "体倒せ！！" , True, (0,0,0))
             screen.blit(text, [400, 0])
         else:
             text = target_number_font.render("ボス出現！！" , True, (0,0,0))
             screen.blit(text, [500, 0])
+        if len(self.bosses):
+            screen.blit(system_imgs[boss_hp_bar_img_index], boss_hp_position)
+            screen.blit(system_imgs[boss_hp_img_index].subsurface(pygame.Rect(0, 0, system_imgs[boss_hp_img_index].get_width() * (self.bosses[0].hp.hp / self.bosses[0].hp.max_hp), system_imgs[boss_hp_img_index].get_height())), boss_hp_position)
 
 
     # def draw_objects(self, screen, player_imgs, enemy_imgs, boss_imgs, item_imgs, warui_magic_imgs):
