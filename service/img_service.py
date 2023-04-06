@@ -44,6 +44,9 @@ def load_player_imgs():
 
         pygame.image.load(dir_img_warui + "ダウン1" + png).convert_alpha(),
         pygame.image.load(dir_img_warui + "ダウン2" + png).convert_alpha(),
+
+        pygame.image.load(dir_img_warui + "勝利1" + png).convert_alpha(),
+        pygame.image.load(dir_img_warui + "勝利2" + png).convert_alpha(),
         ]
 
 def load_enemy_imgs():

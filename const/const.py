@@ -50,7 +50,7 @@ field_right = 800
 #プレイヤー
 first_px = 350
 first_py = 350
-
+result_player_position = {"x" : 100, "y" : 750}
 p_invincible_time = 120
 p_spd = 7
 p_img_width = 75
@@ -146,6 +146,7 @@ p_img_index_attack_down = list(range(30,32))
 p_img_index_attack_left = list(range(32,34))
 p_img_index_attack_right = list(range(34,36))
 p_img_index_dead = list(range(36,38))
+p_img_index_win = list(range(38,40))
 
 p_img_index_normal = {direction_up:p_img_index_up, direction_down:p_img_index_down, direction_left:p_img_index_left, direction_right:p_img_index_right}
 p_img_index_move = {direction_up:p_img_index_move_up, direction_down:p_img_index_move_down, direction_left:p_img_index_move_left, direction_right:p_img_index_move_right}

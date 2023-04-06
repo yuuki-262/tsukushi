@@ -32,6 +32,7 @@ class Game:
         self.mouse_down_count = 0
         self.is_game_clear = False
         self.player = player_c(first_px, first_py)
+        self.clear_position = {"x" : 0, "y" : 0}
         self.enemies = []
         self.bosses = []
         self.items = []
@@ -111,6 +112,8 @@ class Game:
             #ボスの処理
             for b in self.bosses:
                 if b.is_death:
+                    self.clear_position["x"]= self.player.x
+                    self.clear_position["y"]= self.player.y
                     self.is_game_clear = True
                 b.move(self.player)
                 if b.is_del:
@@ -215,22 +218,32 @@ class Game:
         return
 
     def game_clear(self, screen, imgs):
-        #ボスの処理
-        for b in self.bosses:
-            b.move(self.player)
-            if b.is_del:
-                #死んだつくしの削除
-                self.bosses.remove(b)
-                self.score += 1
-                continue
-            if not b.is_ghost or b.count % 30 // 15 == 0:
-                draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
-        draw_object(pygame, screen, self.player, imgs[player_imgs_index][self.player.get_img()])
-        screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
-        screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
+        self.clear_count += 1
+        if self.clear_count < 60:
+            for b in self.bosses:
+                b.move(self.player)
+                if b.is_del:
+                    #死んだつくしの削除
+                    self.bosses.remove(b)
+                    self.score += 1
+                    continue
+                if not b.is_ghost or b.count % 30 // 15 == 0:
+                    draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
+            screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
+        else:
+            self.player.x = result_player_position["x"]
+            self.player.y = result_player_position["y"]
+            self.player.result_move(self.clear_position)
+            if self.clear_count < 80:
+                screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
+                screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
+            elif self.clear_count < 80:
+                draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[0]])
+            else:
+                draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[1]])
         clear_font = pygame.font.Font("JKG-L_3.ttf", 50)
         #text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
-        screen.blit(text, [220, 450])
+        #screen.blit(text, [220, 450])
         pygame.display.update()
 
     def spawn_enemy(self):
@@ -353,6 +366,7 @@ class Game:
     def reset_game(self):
         self.index = title_index
         self.count = 0
+        self.clear_count = 0
         self.is_mouse_down = False
         self.is_mouse_play = False
         self.angle = 0

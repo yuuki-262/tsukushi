@@ -169,3 +169,6 @@ class player(character):
         elif self.attack_values[self.attack_type] == "風":
             self.magics.append(wind(self.x, self.y, self.direction))
             sound_se(pygame, dir_SE + "Wind.wav")
+
+    def result_move(self, clear_position):
+        pass

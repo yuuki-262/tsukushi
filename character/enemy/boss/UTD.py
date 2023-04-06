@@ -9,7 +9,7 @@ class UTD(character):
         self.y = 500
         self.angle = 0
         #self.no = no
-        self.spd = 1
+        self.spd = 5
         self.direction = direction_left
         self.count = 0
         self.ghost_count = 0
@@ -19,7 +19,7 @@ class UTD(character):
         self.hit_width = 400
         self.hit_height = 1000
 
-        self.hp = hp(100)
+        self.hp = hp(40)
 
         self.is_fadeout = False
         self.is_ghost = False
@@ -36,8 +36,7 @@ class UTD(character):
             self.is_ghost = False
             self.ghost_count = 0
         if self.is_death == True:
-            self.count += 1
-            if self.count >= 400:
+            if self.count >= 60:
                 self.is_del = True
             return
         if self.count % 5 == 0:
@@ -57,7 +56,7 @@ class UTD(character):
 
     def get_img(self):
         if self.is_death:
-            return b_img_index_utd_dead[self.count % 400 // 80]
+            return b_img_index_utd_dead[self.count % 60 // 12]
         if self.count % 90 < 30:
             num = 0
         elif self.count % 90 < 40:
