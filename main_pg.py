@@ -1,4 +1,5 @@
 import pygame
+import sqlite3
 import sys
 import math
 import random
@@ -46,6 +47,8 @@ class Game:
         font = pygame.font.Font(None, 80)
 
         imgs = load_all_imgs()
+
+        self.sql_init()
 
         while True:
             if self.index == title_index:
@@ -345,6 +348,9 @@ class Game:
         screen.blit(title_images[self.title_index], title_images[self.title_index].get_rect())
         if self.count % 120 // 60 == 0:
             screen.blit(title_images[self.bg_text_index], title_images[self.title_index].get_rect())
+        target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
+        text = target_number_font.render("コイン：" + str(self.get_coin_num()) + "枚", True, (255,255,255))
+        screen.blit(text, [400, 0])
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and self.count > 120:
                 self.index = 1
@@ -380,6 +386,40 @@ class Game:
         self.enemies = []
         self.bosses = []
         self.items = []
+
+    def sql_init(self):
+        conn = sqlite3.connect("my_database.db")
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS system (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                coin INTEGER
+            )
+        """)
+        cursor.execute("SELECT COUNT(*) FROM system")
+        count = cursor.fetchone()[0]
+        print(count)
+        #systemレコードが存在しない場合レコードを追加
+        if count == 0:
+            cursor.execute("INSERT INTO system (coin) VALUES (0)")
+        conn.commit()
+        conn.close()
+
+    def get_coin_num(self):
+        conn = sqlite3.connect("my_database.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT coin FROM system WHERE id = 1")
+        num = cursor.fetchone()[0]
+        conn.commit()
+        conn.close()
+        return num
+
+    def update_coin(self, coin_value):
+        conn = sqlite3.connect("my_database.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT coin FROM system WHERE id = 1")
+        cursor.execute("UPDATE system SET coin = ? WHERE id = 1", (coin_value,))
+        conn.commit()
 
 if __name__ == '__main__':
     game = Game()
