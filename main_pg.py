@@ -219,6 +219,9 @@ class Game:
 
     def game_clear(self, screen, imgs):
         self.clear_count += 1
+        if self.clear_count == 1:
+            self.clear_position["x"] = self.player.x - result_player_position["x"]
+            self.clear_position["y"] = self.player.y - result_player_position["y"]
         if self.clear_count < 60:
             for b in self.bosses:
                 b.move(self.player)
@@ -233,9 +236,9 @@ class Game:
         else:
             #self.player.x = result_player_position["x"]
             #self.player.y = result_player_position["y"]
-            self.player.result_move(result_player_position)
-            screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
             if self.clear_count < 80:
+                self.player.result_move(self.clear_position)
+                screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
                 screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
                 screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
             elif self.clear_count < 100:
