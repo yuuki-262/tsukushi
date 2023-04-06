@@ -170,5 +170,8 @@ class player(character):
             self.magics.append(wind(self.x, self.y, self.direction))
             sound_se(pygame, dir_SE + "Wind.wav")
 
-    def result_move(self, clear_position):
-        pass
+    def result_move(self, result_player_position):
+        newPosX = self.x - (self.x - result_player_position["x"]) / 20
+        newPosY = self.y - (self.y - result_player_position["y"]) / 20
+        self.x = newPosX
+        self.y = newPosY

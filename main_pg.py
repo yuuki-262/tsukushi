@@ -231,13 +231,14 @@ class Game:
                     draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
             screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
         else:
-            self.player.x = result_player_position["x"]
-            self.player.y = result_player_position["y"]
-            self.player.result_move(self.clear_position)
+            #self.player.x = result_player_position["x"]
+            #self.player.y = result_player_position["y"]
+            self.player.result_move(result_player_position)
+            screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
             if self.clear_count < 80:
                 screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
                 screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
-            elif self.clear_count < 80:
+            elif self.clear_count < 100:
                 draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[0]])
             else:
                 draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[1]])
