@@ -36,7 +36,7 @@ class UTD(character):
             self.is_ghost = False
             self.ghost_count = 0
         if self.is_death == True:
-            if self.count >= 60:
+            if self.count >= 100:
                 self.is_del = True
             return
         if self.count % 5 == 0:
@@ -56,7 +56,7 @@ class UTD(character):
 
     def get_img(self):
         if self.is_death:
-            return b_img_index_utd_dead[self.count % 60 // 12]
+            return b_img_index_utd_dead[self.count % 100 // 20]
         if self.count % 90 < 30:
             num = 0
         elif self.count % 90 < 40:

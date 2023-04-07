@@ -1,5 +1,4 @@
 import pygame
-import sqlite3
 import sys
 import math
 import random
@@ -12,6 +11,7 @@ from service.service import is_hitting_circle_rect, is_hitting_circle_circle, di
 from service.img_service import load_all_imgs
 from character.enemy.tsukushi import tsukushi
 from character.enemy.boss.UTD import UTD
+from repository.system_repository import system_table_init, get_coin_num
 
 
 class Game:
@@ -48,7 +48,7 @@ class Game:
 
         imgs = load_all_imgs()
 
-        self.sql_init()
+        system_table_init()
 
         while True:
             if self.index == title_index:
@@ -73,10 +73,10 @@ class Game:
             self.player.death_count += 1
             self.down(screen, font, player_imgs)
         elif self.is_game_clear == True:
-            self.draw_system(screen, system_imgs, field_imgs)
+            self.draw_system(screen, imgs)
             self.game_clear(screen, imgs)
         else:
-            self.draw_system(screen, system_imgs, field_imgs)
+            self.draw_system(screen, imgs)
             #操作情報取得
             self.handle_input_events()
             # 敵の追加
@@ -117,6 +117,7 @@ class Game:
                 if b.is_death:
                     self.clear_position["x"]= self.player.x
                     self.clear_position["y"]= self.player.y
+                    sound_se(pygame, dir_SE + "Clear.wav")
                     self.is_game_clear = True
                 b.move(self.player)
                 if b.is_del:
@@ -222,7 +223,12 @@ class Game:
 
     def game_clear(self, screen, imgs):
         self.clear_count += 1
-        if self.clear_count < 60:
+        self.draw_system(screen, imgs)
+        if self.clear_count < 30:
+            self.flush(screen)
+        elif self.clear_count < 130:
+            if self.clear_count == 30:
+                sound_se(pygame, dir_SE + "BossDead.wav")
             for b in self.bosses:
                 b.move(self.player)
                 if b.is_del:
@@ -234,21 +240,36 @@ class Game:
                     draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
             screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
         else:
-            #self.player.x = result_player_position["x"]
-            #self.player.y = result_player_position["y"]
-            self.player.result_move(result_player_position)
-            screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
-            if self.clear_count < 80:
+            if self.clear_count < 150:
+                screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
+                self.player.result_move(self.clear_position)
+                screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
+            elif self.clear_count < 160:
                 screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
                 screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
-            elif self.clear_count < 100:
+                screen.blit(imgs[system_imgs_index][result_stand_img_index], (0,0))
                 draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[0]])
             else:
+                screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
+                screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
+                screen.blit(imgs[system_imgs_index][result_stand_img_index], (0,0))
                 draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[1]])
         clear_font = pygame.font.Font("JKG-L_3.ttf", 50)
         #text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
         #screen.blit(text, [220, 450])
         pygame.display.update()
+
+    def flush(self, screen):
+        if self.clear_count < 10:
+            flush_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+            flush_surface.fill((255, 255, 255))
+            screen.blit(flush_surface, (0, 0))
+        elif self.clear_count < 20:
+            pass
+        elif self.clear_count < 30:
+            flush_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+            flush_surface.fill((255, 255, 255))
+            screen.blit(flush_surface, (0, 0))
 
     def spawn_enemy(self):
         num = random.randint(0,10)
@@ -309,7 +330,9 @@ class Game:
                         self.player.is_moving = True
                         self.angle = math.atan2((-1 * (pygame.mouse.get_pos()[1] - self.mouse_position_base[1])), (pygame.mouse.get_pos()[0] - self.mouse_position_base[0]))
 
-    def draw_system(self, screen, system_imgs, field_imgs):
+    def draw_system(self, screen, imgs):
+        system_imgs = imgs[system_imgs_index]
+        field_imgs = imgs[field_imgs_index]
         screen.blit(system_imgs[bg_img_index_normal], system_imgs[bg_img_index_normal].get_rect())
         screen.blit(field_imgs[self.field_index], field_position)
         screen.blit(system_imgs[hpmp_bar_under_img_index], hp_position)
@@ -349,7 +372,7 @@ class Game:
         if self.count % 120 // 60 == 0:
             screen.blit(title_images[self.bg_text_index], title_images[self.title_index].get_rect())
         target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
-        text = target_number_font.render("コイン：" + str(self.get_coin_num()) + "枚", True, (255,255,255))
+        text = target_number_font.render("コイン：" + str(get_coin_num()) + "枚", True, (255,255,255))
         screen.blit(text, [400, 0])
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and self.count > 120:
@@ -386,40 +409,6 @@ class Game:
         self.enemies = []
         self.bosses = []
         self.items = []
-
-    def sql_init(self):
-        conn = sqlite3.connect("my_database.db")
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS system (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                coin INTEGER
-            )
-        """)
-        cursor.execute("SELECT COUNT(*) FROM system")
-        count = cursor.fetchone()[0]
-        print(count)
-        #systemレコードが存在しない場合レコードを追加
-        if count == 0:
-            cursor.execute("INSERT INTO system (coin) VALUES (0)")
-        conn.commit()
-        conn.close()
-
-    def get_coin_num(self):
-        conn = sqlite3.connect("my_database.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT coin FROM system WHERE id = 1")
-        num = cursor.fetchone()[0]
-        conn.commit()
-        conn.close()
-        return num
-
-    def update_coin(self, coin_value):
-        conn = sqlite3.connect("my_database.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT coin FROM system WHERE id = 1")
-        cursor.execute("UPDATE system SET coin = ? WHERE id = 1", (coin_value,))
-        conn.commit()
 
 if __name__ == '__main__':
     game = Game()

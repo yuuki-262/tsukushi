@@ -50,7 +50,7 @@ field_right = 800
 #プレイヤー
 first_px = 350
 first_py = 350
-result_player_position = {"x" : 100, "y" : 750}
+result_player_position = {"x" : 88, "y" : 738}
 p_invincible_time = 120
 p_spd = 7
 p_img_width = 75
@@ -59,7 +59,7 @@ p_hit_circle_r = 35
 
 p_fire_use_mp = 10
 p_thunder_use_mp = 20
-p_wind_use_mp = 60
+p_wind_use_mp = 50
 
 p_attack_values = ["火", "雷", "風"]
 
@@ -131,6 +131,7 @@ boss_hp_bar_img_index = 11
 boss_hp_img_index = 12
 result_img_index = 13
 result_back_img_index = 14
+result_stand_img_index = 15
 
 #プレイヤー画像インデックス
 p_img_index_up = list(range(0,3))

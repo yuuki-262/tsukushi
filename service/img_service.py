@@ -187,6 +187,7 @@ def load_system_imgs():
         pygame.image.load(dir_img_system + "ボスゲージ2" + png).convert_alpha(),
         pygame.image.load(dir_img_system + "リザルト" + png).convert_alpha(),
         pygame.image.load(dir_img_system + "リザルト背景" + png).convert_alpha(),
+        pygame.image.load(dir_img_system + "リザルト台" + png).convert_alpha(),
     ]
 
 def load_field_imgs():
