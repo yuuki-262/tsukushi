@@ -7,6 +7,7 @@ from const.const import *
 from character.player import player as player_c
 from item.weapon import weapon
 from item.heal_item import heal_item
+from item.coin import coin
 from util.game_util import is_hitting_circle_rect, is_hitting_circle_circle, direction_adjust, sound_se, draw_object
 from service.img_service import load_all_imgs
 from character.enemy.tsukushi import tsukushi
@@ -22,7 +23,7 @@ class in_game:
         self.angle = 0
         self.small_position = (pad_radius, screen_height - pad_radius)
         self.score = 0
-        self.target_number = 3
+        self.target_number = 10
         self.field_index = field_img_index_normal
         self.bg_index = bg_img_index_normal
         self.bg_text_index = title_text1_img_index
@@ -293,11 +294,13 @@ class in_game:
 
     def spawn_item(self, e):
         if len(self.items) < drop_item:
-            item_type = random.randint(0, 1)
+            item_type = random.randint(0, 2)
             if item_type == 0:
                 self.items.append(weapon(e.x, e.y, random.randint(0, 2)))
             elif item_type == 1:
                 self.items.append(heal_item(e.x, e.y, random.randint(0, 1)))
+            else:
+                self.items.append(coin(e.x, e.y))
 
     def handle_input_events(self):
         for event in pygame.event.get():

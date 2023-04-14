@@ -31,6 +31,8 @@ class player(character):
         self.hp = hp(100)
         self.mp = mp(100)
 
+        self.coin_currency = 0
+
         self.attack_type = 0
         self.attack_values = p_attack_values
         self.use_attack_mp = [p_fire_use_mp, p_thunder_use_mp, p_wind_use_mp]
