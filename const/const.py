@@ -189,7 +189,8 @@ b_img_index_utd_dead = list(range(5,10))
 
 #アイテム画像インデックス
 wepon_img_index_up = {p_attack_values[0]:0, p_attack_values[1]:1, p_attack_values[2]:2}
-onigiri_index_fire_up = {onigiri_type[0]:3, onigiri_type[1]:4, onigiri_type[2]:5}
+onigiri_img_index = {onigiri_type[0]:3, onigiri_type[1]:4, onigiri_type[2]:5}
+coin_img_index = list(range(6,9))
 
 #魔法画像インデックス
 warui_img_fire_up = list(range(0,3))

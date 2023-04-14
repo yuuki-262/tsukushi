@@ -3,7 +3,7 @@ import math
 
 from character.base.character import character
 from const.const import *
-from service.service import sound_se
+from util.game_util import sound_se
 
 from item.base.item import item
 from magic.fire import fire
@@ -31,7 +31,7 @@ class player(character):
         self.hp = hp(100)
         self.mp = mp(100)
 
-        self.attack_type = 2
+        self.attack_type = 0
         self.attack_values = p_attack_values
         self.use_attack_mp = [p_fire_use_mp, p_thunder_use_mp, p_wind_use_mp]
         self.magics = []
@@ -40,6 +40,9 @@ class player(character):
         self.is_attack = False
 
         self.is_damaging = False
+        self.is_auto_heal = False
+        self.auto_heal_count = 0
+        self.auto_heal_limit = 0
         self.is_mp_heal = True
         self.is_death = False
         self.death_count = 0
@@ -50,6 +53,8 @@ class player(character):
             self.is_mp_heal = True
         if not self.is_death:
             self.move(angle, keys)
+            if self.is_auto_heal:
+                self.auto_hp_heal()
             if self.is_mp_heal:
                 self.auto_mp_heal()
             #ダメージを受けているときは無敵
@@ -133,6 +138,13 @@ class player(character):
         if self.damage_count >= 60:
             self.damage_count = 0
             self.is_damaging = False
+
+    def auto_hp_heal(self):
+        self.auto_heal_count += 1
+        if self.auto_heal_count % 10 == 0:
+            self.hp.change_hp(1)
+        if self.auto_heal_count > self.auto_heal_limit * 10:
+            self.is_auto_heal  = False
 
     def auto_mp_heal(self):
         if self.count % 10 == 0 and self.mp.mp < 100:

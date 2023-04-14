@@ -1,5 +1,5 @@
 from character.base.character import character
-from service.service import sound_se
+from util.game_util import sound_se
 from const.const import *
 import random
 

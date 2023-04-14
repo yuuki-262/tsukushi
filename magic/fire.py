@@ -1,7 +1,7 @@
 from magic.base.magic import magic
 from const.const import *
 
-from service.service import is_hitting_circle_rect
+from util.game_util import is_hitting_circle_rect, is_hitting_circle_circle
 
 class fire(magic):
     def __init__(self, x, y, direction):
@@ -29,17 +29,25 @@ class fire(magic):
             self.x = x + 80
 
 
-    def attack(self, pygame, enemies, player = None):
+    def attack(self, pygame, enemies, bosses, items, player = None):
         self.count += 1
         if self.count < 20:
         #つくしのヒット処理
             for e in enemies:
                 if e.is_death == False and is_hitting_circle_rect(self, e):
                     e.damage(pygame, self.name, player)
-                    #score += 1
+            for b in bosses:
+                if b.is_death == False and is_hitting_circle_rect(self, b):
+                    b.damage(pygame, self.name, player)
+            for i in items:
+                if is_hitting_circle_circle(self, i):
+                    self.onigiri_bake(i)
         if self.count >= 30:
             self.is_del = True
 
+    def onigiri_bake(self, item):
+        if item.type == "onigiri" or item.type == "shine":
+            item.type = "baked"
 
     def get_img(self):
         num = self.count % 30 // 10

@@ -7,16 +7,14 @@ from const.const import *
 from character.player import player as player_c
 from item.weapon import weapon
 from item.heal_item import heal_item
-from service.service import is_hitting_circle_rect, is_hitting_circle_circle, direction_adjust, sound_se, draw_object
+from util.game_util import is_hitting_circle_rect, is_hitting_circle_circle, direction_adjust, sound_se, draw_object
 from service.img_service import load_all_imgs
 from character.enemy.tsukushi import tsukushi
 from character.enemy.boss.UTD import UTD
-from repository.system_repository import system_table_init, get_coin_num
+from repository.system_repository import system_table_init, get_coin_num, update_coin
 
-
-class Game:
+class in_game:
     def __init__(self):
-        self.index = title_index
         self.count = 0
         self.clear_count = 0
         self.is_mouse_down = False
@@ -25,7 +23,6 @@ class Game:
         self.small_position = (pad_radius, screen_height - pad_radius)
         self.score = 0
         self.target_number = 3
-        self.title_index = title_img_index_normal
         self.field_index = field_img_index_normal
         self.bg_index = bg_img_index_normal
         self.bg_text_index = title_text1_img_index
@@ -34,32 +31,12 @@ class Game:
         self.is_game_clear = False
         self.player = player_c(first_px, first_py)
         self.clear_position = {"x" : 0, "y" : 0}
+        self.is_game_end = False
         self.enemies = []
         self.bosses = []
         self.items = []
 
-    def main(self):
-        pygame.init()
-        pygame.display.set_caption("つくしの軍勢")
-
-        screen = pygame.display.set_mode((screen_width, screen_height))
-        clock = pygame.time.Clock()
-        font = pygame.font.Font(None, 80)
-
-        imgs = load_all_imgs()
-
-        system_table_init()
-
-        while True:
-            if self.index == title_index:
-                self.title_screen(imgs, screen, clock)
-            elif self.index == load_index:
-                self.load_screen(screen, clock)
-            elif self.index == in_game_index:
-                self.in_game(screen, font, imgs)
-                clock.tick(60)
-
-    def in_game(self, screen, font, imgs):
+    def play_game(self, screen, imgs):
         self.count += 1
         player_imgs = imgs[player_imgs_index]
         enemy_imgs = imgs[enemy_imgs_index]
@@ -71,7 +48,7 @@ class Game:
 
         if self.player.is_death:
             self.player.death_count += 1
-            self.down(screen, font, player_imgs)
+            self.down(screen, imgs)
         elif self.is_game_clear == True:
             self.draw_system(screen, imgs)
             self.game_clear(screen, imgs)
@@ -165,8 +142,7 @@ class Game:
 
             #魔法の処理
             for m in self.player.magics:
-                m.attack(pygame, self.enemies, self.player)
-                m.attack(pygame, self.bosses, self.player)
+                m.attack(pygame, self.enemies, self.bosses, self.items, self.player)
                 if not m.is_del:
                     draw_object(pygame, screen, m, warui_magic_imgs[m.get_img()])
                     #screen.blit(warui_magic_imgs[m.get_img()], direction_adjust(m))
@@ -200,7 +176,9 @@ class Game:
 
         pygame.display.update()
 
-    def down(self, screen, font, player_imgs):
+    def down(self, screen, imgs):
+        player_imgs = imgs[player_imgs_index]
+        system_imgs = imgs[system_imgs_index]
         darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
         pressed_key = pygame.key.get_pressed()
         self.player.state(0, pressed_key)
@@ -210,23 +188,33 @@ class Game:
             screen.blit(darken_surface, (0, 0))
             draw_object(pygame, screen, self.player, player_imgs[self.player.get_img()])
             screen.blit(player_imgs[self.player.get_img()], direction_adjust(self.player))
-        else:
+        elif self.player.death_count < 245:
             darken_surface.fill((0, 0, 0))
             # 画面に透明な黒いサーフェスを描画する
             screen.blit(darken_surface, (0, 0))
+            font = pygame.font.Font(None, 80)
             text = font.render("GAME OVER", True, (255,255,255))
             screen.blit(text, [220, 450])
-            if self.player.death_count > 300:
-                self.reset_game()
-        pygame.display.update()
+        else:
+            screen.blit(system_imgs[result_back_img_index], (0,0))
+            screen.blit(system_imgs[result_img_index], (0,0))
+            for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        self.is_game_end = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        self.is_game_end = True
         return
 
     def game_clear(self, screen, imgs):
         self.clear_count += 1
         self.draw_system(screen, imgs)
         if self.clear_count < 30:
-            self.flush(screen)
-        elif self.clear_count < 130:
+            self.flush(screen, imgs)
+            return
+        if self.clear_count < 130:
             if self.clear_count == 30:
                 sound_se(pygame, dir_SE + "BossDead.wav")
             for b in self.bosses:
@@ -254,18 +242,30 @@ class Game:
                 screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
                 screen.blit(imgs[system_imgs_index][result_stand_img_index], (0,0))
                 draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[1]])
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        self.is_game_end = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        self.is_game_end = True
+
         clear_font = pygame.font.Font("JKG-L_3.ttf", 50)
         #text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
         #screen.blit(text, [220, 450])
-        pygame.display.update()
 
-    def flush(self, screen):
+    def flush(self, screen, imgs):
         if self.clear_count < 10:
             flush_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
             flush_surface.fill((255, 255, 255))
             screen.blit(flush_surface, (0, 0))
         elif self.clear_count < 20:
-            pass
+            if self.clear_count == 30:
+                sound_se(pygame, dir_SE + "BossDead.wav")
+            for b in self.bosses:
+                    draw_object(pygame, screen, b, imgs[boss_imgs_index][b.get_img()])
+            screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
         elif self.clear_count < 30:
             flush_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
             flush_surface.fill((255, 255, 255))
@@ -297,7 +297,7 @@ class Game:
             if item_type == 0:
                 self.items.append(weapon(e.x, e.y, random.randint(0, 2)))
             elif item_type == 1:
-                self.items.append(heal_item(e.x, e.y, random.randint(0, 2)))
+                self.items.append(heal_item(e.x, e.y, random.randint(0, 1)))
 
     def handle_input_events(self):
         for event in pygame.event.get():
@@ -344,72 +344,14 @@ class Game:
         screen.blit(system_imgs[awake_cover_index], hp_position)
         screen.blit(system_imgs[hp_img_index].subsurface(pygame.Rect(0, 0, hp_width_left + (hp_width_middle * self.player.hp.hp / self.player.hp.max_hp), system_imgs[hp_img_index].get_height())), hp_position)
         screen.blit(system_imgs[hpmp_bar_img_index], hp_position)
-        target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
-        if self.target_number - self.score > 0:
-            text = target_number_font.render("あと" + str(self.target_number - self.score) + "体倒せ！！" , True, (0,0,0))
-            screen.blit(text, [400, 0])
-        else:
-            text = target_number_font.render("ボス出現！！" , True, (0,0,0))
-            screen.blit(text, [500, 0])
+        target_number_font = pygame.font.Font(None, 50)
+        if not self.is_game_clear:
+            if self.target_number - self.score > 0:
+                text = target_number_font.render("あと" + str(self.target_number - self.score) + "体倒せ！！" , True, (0,0,0))
+                screen.blit(text, [400, 0])
+            else:
+                text = target_number_font.render("ボス出現！！" , True, (0,0,0))
+                screen.blit(text, [500, 0])
         if len(self.bosses):
             screen.blit(system_imgs[boss_hp_bar_img_index], boss_hp_position)
             screen.blit(system_imgs[boss_hp_img_index].subsurface(pygame.Rect(0, 0, system_imgs[boss_hp_img_index].get_width() * (self.bosses[0].hp.hp / self.bosses[0].hp.max_hp), system_imgs[boss_hp_img_index].get_height())), boss_hp_position)
-
-
-    # def draw_objects(self, screen, player_imgs, enemy_imgs, boss_imgs, item_imgs, warui_magic_imgs):
-    #     self.player.draw(screen, player_imgs)
-    #     for enemy in self.enemies:
-    #         enemy.draw(screen, enemy_imgs)
-    #     for boss in self.bosses:
-    #         boss.draw(screen, boss_imgs)
-    #     for item in self.items:
-    #         item.draw(screen, item_imgs)
-
-    def title_screen(self, imgs, screen, clock):
-        title_images = imgs[title_imgs_index]
-        self.count += 1
-        screen.blit(title_images[self.title_index], title_images[self.title_index].get_rect())
-        if self.count % 120 // 60 == 0:
-            screen.blit(title_images[self.bg_text_index], title_images[self.title_index].get_rect())
-        target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
-        text = target_number_font.render("コイン：" + str(get_coin_num()) + "枚", True, (255,255,255))
-        screen.blit(text, [400, 0])
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and self.count > 120:
-                self.index = 1
-                self.count = 0
-                sound_se(pygame, dir_SE + "GameStart.wav")
-        pygame.display.update()
-        clock.tick(60)
-
-    def load_screen(self, screen, clock):
-        self.count += 1
-        darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
-        darken_surface.fill((0, 0, 0, 30))
-        screen.blit(darken_surface, (0, 0))
-        pygame.display.update()
-        if self.count > 40:
-            self.index = in_game_index
-            self.count = 0
-        clock.tick(60)
-
-    def reset_game(self):
-        self.index = title_index
-        self.count = 0
-        self.clear_count = 0
-        self.is_mouse_down = False
-        self.is_mouse_play = False
-        self.angle = 0
-        self.small_position = (pad_radius, screen_height - pad_radius)
-        self.score = 0
-        self.mouse_position_base = (0, 0)
-        self.mouse_down_count = 0
-        self.is_game_clear = False
-        self.player = player_c(first_px, first_py)
-        self.enemies = []
-        self.bosses = []
-        self.items = []
-
-if __name__ == '__main__':
-    game = Game()
-    game.main()

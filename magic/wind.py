@@ -2,7 +2,7 @@ import math
 
 from magic.base.magic import magic
 from const.const import *
-from service.service import is_hitting_circle_rect
+from util.game_util import is_hitting_circle_rect
 
 class wind(magic):
     def __init__(self, x, y, direction):
@@ -32,7 +32,7 @@ class wind(magic):
             self.x = x + 80
 
 
-    def attack(self, pygame, enemies, player):
+    def attack(self, pygame, enemies, bosses, items, player = None):
         self.count += 1
         self.warui_angle += 3
         self.x = player.x + self.warui_distance * math.cos(math.radians(self.warui_angle))
@@ -40,15 +40,9 @@ class wind(magic):
         for e in enemies:
             if e.is_death == False and is_hitting_circle_rect(self, e):
                 e.damage(pygame, self.name, player)
-        # if self.count % 90 < 30:
-        #     self.x = player.x + 50
-        #     self.y = player.y - 30
-        # elif self.count % 90 < 60:
-        #     self.x = player.x - 50
-        #     self.y = player.y - 80
-        # elif self.count % 90 <= 90:
-        #     self.x = player.x - 50
-        #     self.y = player.y + 50
+        for b in bosses:
+            if b.is_death == False and is_hitting_circle_rect(self, b):
+                b.damage(pygame, self.name, player)
         if self.count >= 1000:
             self.is_del = True
 

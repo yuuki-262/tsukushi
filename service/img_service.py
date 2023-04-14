@@ -128,6 +128,9 @@ def load_item_imgs():
         pygame.image.load(dir_img_item + "おにぎり" + png).convert_alpha(),
         pygame.image.load(dir_img_item + "ふっくらおにぎり" + png).convert_alpha(),
         pygame.image.load(dir_img_item + "焼きおにぎり" + png).convert_alpha(),
+        pygame.image.load(dir_img_item + "コイン1" + png).convert_alpha(),
+        pygame.image.load(dir_img_item + "コイン2" + png).convert_alpha(),
+        pygame.image.load(dir_img_item + "コイン3" + png).convert_alpha(),
     ]
 
 def load_attack_imgs():

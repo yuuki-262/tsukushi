@@ -1,7 +1,7 @@
 from item.base.item import item
 from const.const import *
 from character.player import player
-from service.service import sound_se
+from util.game_util import sound_se
 
 class weapon(item):
     def __init__(self, x, y, type):

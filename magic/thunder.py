@@ -1,7 +1,7 @@
 from magic.base.magic import magic
 from const.const import *
 
-from service.service import is_hitting_circle_rect
+from util.game_util import is_hitting_circle_rect
 
 class thunder(magic):
     def __init__(self, x, y, direction):
@@ -35,7 +35,7 @@ class thunder(magic):
             self.x = x + 80
 
 
-    def attack(self, pygame, enemies, player = None):
+    def attack(self, pygame, enemies, bosses, items, player = None):
         self.count += 1
         if self.direction == direction_up:
             self.y = self.y - self.spd
@@ -59,6 +59,10 @@ class thunder(magic):
                 # pygame.draw.rect(screen,GREEN, BOX2)
                 e.damage(pygame, self.name, player)
                 #score += 1
+        #ボスのヒット処理
+        for b in bosses:
+            if b.is_death == False and is_hitting_circle_rect(self, b):
+                b.damage(pygame, self.name, player)
         if (self.x < field_left - (self.img_width / 2)
                 or self.x > field_right + (self.img_width / 2)
                 or self.y < field_top - (self.img_height / 2)
