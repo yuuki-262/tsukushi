@@ -28,12 +28,12 @@ class player(character):
         self.damage_count = 0
         self.direction = direction_down
 
-        self.hp = hp(100)
+        self.hp = hp(300)
         self.mp = mp(100)
 
         self.coin_currency = 0
 
-        self.attack_type = 0
+        self.attack_type = 2
         self.attack_values = p_attack_values
         self.use_attack_mp = [p_fire_use_mp, p_thunder_use_mp, p_wind_use_mp]
         self.magics = []
@@ -49,12 +49,12 @@ class player(character):
         self.is_death = False
         self.death_count = 0
 
-    def state(self, angle, keys):
+    def state(self, game, angle, keys):
         self.count += 1
         if not self.is_mp_heal and self.count > 60:
             self.is_mp_heal = True
         if not self.is_death:
-            self.move(angle, keys)
+            self.move(game, angle, keys)
             if self.is_auto_heal:
                 self.auto_hp_heal()
             if self.is_mp_heal:
@@ -64,33 +64,33 @@ class player(character):
                 self.ghost()
 
     #位置情報の更新
-    def move(self, angle=0, keys=None):
+    def move(self, game, angle=0, keys=None):
         if self.is_moving and not self.is_attack:
             self.check_move(angle)
         if self.is_attack == False:
             if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
-                self.check_move(math.radians(135))
+                self.check_move(math.radians(135), game)
                 self.direction = direction_left
             elif keys[pygame.K_LEFT] and keys[pygame.K_DOWN]:
-                self.check_move(math.radians(225))
+                self.check_move(math.radians(225), game)
                 self.direction = direction_left
             elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
-                self.check_move(math.radians(45))
+                self.check_move(math.radians(45), game)
                 self.direction = direction_right
             elif keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
-                self.check_move(math.radians(315))
+                self.check_move(math.radians(315), game)
                 self.direction = direction_right
             elif keys[pygame.K_LEFT]:
-                self.check_move(math.radians(180))
+                self.check_move(math.radians(180), game)
                 self.direction = direction_left
             elif keys[pygame.K_RIGHT]:
-                self.check_move(math.radians(0))
+                self.check_move(math.radians(0), game)
                 self.direction = direction_right
             elif keys[pygame.K_UP]:
-                self.check_move(math.radians(90))
+                self.check_move(math.radians(90), game)
                 self.direction = direction_up
             elif keys[pygame.K_DOWN]:
-                self.check_move(math.radians(270))
+                self.check_move(math.radians(270), game)
                 self.direction = direction_down
 
     def get_img(self):
@@ -152,12 +152,15 @@ class player(character):
         if self.count % 10 == 0 and self.mp.mp < 100:
             self.mp.change_mp(1)
 
-    def check_move(self, angle):
+    def check_move(self, angle, game):
         new_x = self.x + math.cos(angle) * self.spd
         new_y = self.y - math.sin(angle) * self.spd
-        if new_x > field_left + self.img_width / 2 and new_x < field_right - self.img_width / 2:
+        if new_x > game.field_left + self.img_width / 2 and new_x < game.field_right - self.img_width / 2:
             self.x = new_x
-        if new_y > field_top and new_y < field_bottom - self.img_height / 2:
+        else:
+            if new_x >= game.field_right - self.img_width / 2:
+                self.x = game.field_right - self.img_width / 2
+        if new_y > game.field_top and new_y < game.field_bottom - self.img_height / 2:
             self.y = new_y
         self.is_moving = True
         if angle <= (-3 * math.pi / 4) or angle >= (3 * math.pi / 4):

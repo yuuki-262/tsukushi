@@ -5,11 +5,11 @@ from system.hp import hp
 
 class UTD(character):
     def __init__(self):
-        self.x = field_width-1
+        self.x = field_width
         self.y = 500
         self.angle = 0
         #self.no = no
-        self.spd = 5
+        self.spd = 2
         self.direction = direction_left
         self.count = 0
         self.ghost_count = 0
@@ -28,7 +28,7 @@ class UTD(character):
         #死亡エフェクト後にインスタンスを削除する為のフラグ
         self.is_del = False
 
-    def move(self, p):
+    def move(self, game):
         self.count += 1
         if self.is_ghost:
             self.ghost_count += 1
@@ -41,6 +41,9 @@ class UTD(character):
             return
         if self.count % 5 == 0:
             self.x -= self.spd
+        game.field_right = default_field_right - (default_field_right - self.x) - self.hit_width / 2
+        if self.x - self.hit_width / 2 - game.player.img_width < 0:
+            game.player.is_death = True
             # if self.is_fadeout and self.count >= 40:
             #     self.is_del = True
 

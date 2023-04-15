@@ -46,7 +46,7 @@ class thunder(magic):
         elif self.direction == direction_right:
             self.x = self.x + self.spd
 
-        #つくしのヒット処理
+        #つくしのヒット処理s
         for e in enemies:
             if e.is_death == False and is_hitting_circle_rect(self, e):
                 # 当たり判定可視化
@@ -63,10 +63,10 @@ class thunder(magic):
         for b in bosses:
             if b.is_death == False and is_hitting_circle_rect(self, b):
                 b.damage(pygame, self.name, player)
-        if (self.x < field_left - (self.img_width / 2)
-                or self.x > field_right + (self.img_width / 2)
-                or self.y < field_top - (self.img_height / 2)
-                or self.y > field_bottom + (self.img_height / 2) ):
+        if (self.x < default_field_left - (self.img_width / 2)
+                or self.x > default_field_right + (self.img_width / 2)
+                or self.y < default_field_top - (self.img_height / 2)
+                or self.y > default_field_bottom + (self.img_height / 2) ):
             self.is_del = True
 
 

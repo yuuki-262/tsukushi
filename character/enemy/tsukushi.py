@@ -86,7 +86,7 @@ class tsukushi(character):
             self.is_ghost = False
         self.x += 2 * self.knock_back_distance["x"]
         self.y += 2 * self.knock_back_distance["y"]
-        if self.y < field_top:
+        if self.y < default_field_top:
             self.is_del = True
             self.is_fadeout = True
         # self.x += 2 * math.cos(self.knock_back_angle)

@@ -41,10 +41,10 @@ tmp_height = 200
 field_width = 800
 field_height = 800
 field_position = [0, 200]
-field_top = 200
-field_bottom = 1000
-field_left = 0
-field_right = 800
+default_field_top = 200
+default_field_bottom = 1000
+default_field_left = 0
+default_field_right = 800
 
 
 #プレイヤー

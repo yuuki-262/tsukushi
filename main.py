@@ -5,13 +5,9 @@ import random
 
 from const.const import *
 from system.in_game import in_game
-from character.player import player as player_c
-from item.weapon import weapon
-from item.heal_item import heal_item
-from util.game_util import is_hitting_circle_rect, is_hitting_circle_circle, direction_adjust, sound_se, draw_object
+from util.game_util import sound_se
 from service.img_service import load_all_imgs
-from character.enemy.tsukushi import tsukushi
-from character.enemy.boss.UTD import UTD
+
 from repository.system_repository import system_table_init, get_coin_num, update_coin
 
 class Game:
@@ -30,7 +26,6 @@ class Game:
 
         screen = pygame.display.set_mode((screen_width, screen_height))
         clock = pygame.time.Clock()
-
         imgs = load_all_imgs()
 
         system_table_init()

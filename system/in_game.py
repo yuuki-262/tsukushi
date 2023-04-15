@@ -4,7 +4,7 @@ import math
 import random
 
 from const.const import *
-from character.player import player as player_c
+from character.player import player
 from item.weapon import weapon
 from item.heal_item import heal_item
 from item.coin import coin
@@ -23,14 +23,18 @@ class in_game:
         self.angle = 0
         self.small_position = (pad_radius, screen_height - pad_radius)
         self.score = 0
-        self.target_number = 10
+        self.target_number = 5
+        self.field_top = default_field_top
+        self.field_bottom = default_field_bottom
+        self.field_left = default_field_left
+        self.field_right = default_field_right
         self.field_index = field_img_index_normal
         self.bg_index = bg_img_index_normal
         self.bg_text_index = title_text1_img_index
         self.mouse_position_base = (0, 0)
         self.mouse_down_count = 0
         self.is_game_clear = False
-        self.player = player_c(first_px, first_py)
+        self.player = player(first_px, first_py)
         self.clear_position = {"x" : 0, "y" : 0}
         self.is_game_end = False
         self.enemies = []
@@ -76,7 +80,7 @@ class in_game:
                     if self.mouse_down_count >= 3:
                         self.player.is_moving = True
                         self.angle = math.atan2((-1 * (mouse_position_now[1] - self.mouse_position_base[1])), (mouse_position_now[0] - self.mouse_position_base[0]))
-            self.player.state(self.angle, pressed_key)
+            self.player.state(self, self.angle, pressed_key)
 
             #アイテムの処理
             for i in self.items:
@@ -97,7 +101,7 @@ class in_game:
                     self.clear_position["y"]= self.player.y
                     sound_se(pygame, dir_SE + "Clear.wav")
                     self.is_game_clear = True
-                b.move(self.player)
+                b.move(self)
                 if b.is_del:
                     #死んだつくしの削除
                     self.bosses.remove(b)
@@ -115,7 +119,7 @@ class in_game:
             #敵の処理
             for e in self.enemies:
                 e.move(self.player)
-                if e.x < field_left - (e.img_width / 2) or e.y < 0 + (e.img_height / 2) and not e.is_ghost:
+                if e.x < default_field_left - (e.img_width / 2) or e.y < 0 + (e.img_height / 2) and not e.is_ghost:
                     #画面外のつくしを削除
                     #self.enemies.remove(e)
                     continue
@@ -182,7 +186,7 @@ class in_game:
         system_imgs = imgs[system_imgs_index]
         darken_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
         pressed_key = pygame.key.get_pressed()
-        self.player.state(0, pressed_key)
+        self.player.state(self, 0, pressed_key)
         # 透明度を徐々に上げる
         if self.player.death_count < 125:
             darken_surface.fill((0, 0, 0, self.player.death_count))
@@ -233,24 +237,23 @@ class in_game:
                 screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
                 self.player.result_move(self.clear_position)
                 screen.blit(imgs[player_imgs_index][self.player.get_img()], direction_adjust(self.player))
-            elif self.clear_count < 160:
+            else :
                 screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
                 screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
                 screen.blit(imgs[system_imgs_index][result_stand_img_index], (0,0))
-                draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[0]])
-            else:
-                screen.blit(imgs[system_imgs_index][result_back_img_index], (0,0))
-                screen.blit(imgs[system_imgs_index][result_img_index], (0,0))
-                screen.blit(imgs[system_imgs_index][result_stand_img_index], (0,0))
-                draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[1]])
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                    if event.type == pygame.KEYDOWN:
-                        self.is_game_end = True
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        self.is_game_end = True
+                font = pygame.font.Font("JKG-L_3.ttf", 50)
+                text = font.render(str(self.player.coin_currency), True, (0,0,0))
+                screen.blit(text, [650, 810])
+
+                draw_object(pygame, screen, self.player, imgs[player_imgs_index][p_img_index_win[0 if self.clear_count < 160 else 1]])
+                if self.clear_count > 180:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                        if not self.is_game_end and (event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN):
+                            update_coin(get_coin_num() + self.player.coin_currency)
+                            self.is_game_end = True
 
         clear_font = pygame.font.Font("JKG-L_3.ttf", 50)
         #text = clear_font.render("ゲームクリア！！" , True, (0,0,0))
@@ -284,13 +287,13 @@ class in_game:
         if num2 == 0:
             if len(self.bosses) == 0 and (self.target_number - self.score) <= 0:
                 self.bosses.append(UTD())
-            self.enemies.append(tsukushi(field_right, random.randint(field_top, field_bottom), direction_left, num))
+            self.enemies.append(tsukushi(default_field_right, random.randint(default_field_top, default_field_bottom), direction_left, num))
         elif num2 == 1:
-            self.enemies.append(tsukushi(random.randint(field_left, field_right), field_bottom, direction_up, num))
+            self.enemies.append(tsukushi(random.randint(default_field_left, default_field_right), default_field_bottom, direction_up, num))
         elif num2 == 2:
-            self.enemies.append(tsukushi(random.randint(field_left, field_right), field_top, direction_down, num))
+            self.enemies.append(tsukushi(random.randint(default_field_left, default_field_right), default_field_top, direction_down, num))
         elif num2 == 3:
-             self.enemies.append(tsukushi(field_left, random.randint(field_top, field_bottom), direction_right, num))
+             self.enemies.append(tsukushi(default_field_left, random.randint(default_field_top, default_field_bottom), direction_right, num))
 
     def spawn_item(self, e):
         if len(self.items) < drop_item:
@@ -347,7 +350,7 @@ class in_game:
         screen.blit(system_imgs[awake_cover_index], hp_position)
         screen.blit(system_imgs[hp_img_index].subsurface(pygame.Rect(0, 0, hp_width_left + (hp_width_middle * self.player.hp.hp / self.player.hp.max_hp), system_imgs[hp_img_index].get_height())), hp_position)
         screen.blit(system_imgs[hpmp_bar_img_index], hp_position)
-        target_number_font = pygame.font.Font(None, 50)
+        target_number_font = pygame.font.Font("JKG-L_3.ttf", 50)
         if not self.is_game_clear:
             if self.target_number - self.score > 0:
                 text = target_number_font.render("あと" + str(self.target_number - self.score) + "体倒せ！！" , True, (0,0,0))
